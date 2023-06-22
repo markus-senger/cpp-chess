@@ -1,0 +1,81 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Quelldateien">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;c++;cppm;ixx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="Headerdateien">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h;hh;hpp;hxx;h++;hm;inl;inc;ipp;xsd</Extensions>
+    </Filter>
+    <Filter Include="Ressourcendateien">
+      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
+    </Filter>
+    <Filter Include="Headerdateien\UI">
+      <UniqueIdentifier>{a00ccb9f-095c-4f92-a66e-a179c5fba26b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Headerdateien\Figures">
+      <UniqueIdentifier>{dfa25958-8997-4aa5-b454-dc82e65f08ee}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="main.cpp">
+      <Filter>Quelldateien</Filter>
+    </ClCompile>
+    <ClCompile Include="chessGame.cpp">
+      <Filter>Quelldateien</Filter>
+    </ClCompile>
+    <ClCompile Include="chessBoard.cpp">
+      <Filter>Quelldateien</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="chessGame.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="player.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="button.h">
+      <Filter>Headerdateien\UI</Filter>
+    </ClInclude>
+    <ClInclude Include="text.h">
+      <Filter>Headerdateien\UI</Filter>
+    </ClInclude>
+    <ClInclude Include="playerAI.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="playerHuman.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="chessBoard.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="bishop.h">
+      <Filter>Headerdateien\Figures</Filter>
+    </ClInclude>
+    <ClInclude Include="king.h">
+      <Filter>Headerdateien\Figures</Filter>
+    </ClInclude>
+    <ClInclude Include="knight.h">
+      <Filter>Headerdateien\Figures</Filter>
+    </ClInclude>
+    <ClInclude Include="pawn.h">
+      <Filter>Headerdateien\Figures</Filter>
+    </ClInclude>
+    <ClInclude Include="queen.h">
+      <Filter>Headerdateien\Figures</Filter>
+    </ClInclude>
+    <ClInclude Include="rook.h">
+      <Filter>Headerdateien\Figures</Filter>
+    </ClInclude>
+    <ClInclude Include="chessFigure.h">
+      <Filter>Headerdateien\Figures</Filter>
+    </ClInclude>
+    <ClInclude Include="figureIndex.h">
+      <Filter>Headerdateien\Figures</Filter>
+    </ClInclude>
+  </ItemGroup>
+</Project>
