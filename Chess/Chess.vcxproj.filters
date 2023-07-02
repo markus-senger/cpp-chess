@@ -80,5 +80,11 @@
     <ClInclude Include="figureIndex.h">
       <Filter>Headerdateien\Figures</Filter>
     </ClInclude>
+    <ClInclude Include="spriteHandler.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="color.h">
+      <Filter>Headerdateien\Figures</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

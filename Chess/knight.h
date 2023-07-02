@@ -6,13 +6,32 @@
 namespace swe {
 	class Knight : public ChessFigure {
 	public:
-		Knight(swe::ChessBoard& chessBoard, sf::Sprite& spriteFigrue, sf::Sprite& spriteSelectedField, bool essential, int row, int col)
-			: ChessFigure{ chessBoard, spriteFigrue, spriteSelectedField, essential, row, col } {
+		Knight(swe::ChessBoard& chessBoard, swe::SpriteHandler& spriteHandler, sf::Sprite figureSprite, bool essential, swe::Color color, int row, int col)
+            : ChessFigure{ chessBoard, spriteHandler, figureSprite, essential, color, row, col } {
 
 		}
 
-		void showSteps() override {
+		void showSteps(sf::RenderWindow& window) override {
+            int dx[8] = { 1, 2, 2, 1, -1, -2, -2, -1 };
+            int dy[8] = { 2, 1, -1, -2, -2, -1, 1, 2 };
 
+            for (int i = 0; i < 8; i++) {
+                int newRow = mRow + dy[i];
+                int newCol = mCol + dx[i];
+
+                if (newRow >= 0 && newRow < 8 && newCol >= 0 && newCol < 8) {
+                    if (mChessBoard.getBoardWithFigures()[(newRow * 8) + newCol] == nullptr) {
+                        sf::Sprite& s = mSpriteHandler.getPossibleMoveSprite();
+                        s.setPosition(sf::Vector2f(newCol * 85.25 + 60 + 25, newRow * 85.25 + 60 + 25));
+                        window.draw(s);
+                    }
+                    else if (mChessBoard.getBoardWithFigures()[(newRow * 8) + newCol]->getColor() != mColor) {
+                        sf::Sprite& s = mSpriteHandler.getAttackFieldSprite();
+                        s.setPosition(sf::Vector2f(newCol * 85.25 + 60 + 3, newRow * 85.25 + 60 + 3));
+                        window.draw(s);
+                    }
+                }
+            }
 		}
 
 	private:

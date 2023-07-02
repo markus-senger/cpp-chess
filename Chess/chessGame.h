@@ -6,17 +6,14 @@
 #include "playerHuman.h"
 #include "playerAI.h"
 #include "chessBoard.h"
+#include "spriteHandler.h"
 
 namespace swe {
 	class ChessGame {
 	public:
 		ChessGame();
 		sf::RenderWindow& getWindow();
-		sf::Sprite& getBoardSprite();
-		sf::Sprite& getWhiteFigureSprite(int idx);
-		sf::Sprite& getBlackFigureSprite(int idx);
-		sf::Sprite& getSelectedFieldSprite();
-
+		swe::SpriteHandler& getSpriteHandler();
 		void setStarted(bool value);
 
 
@@ -24,23 +21,12 @@ namespace swe {
 		void createWindow();
 		void draw();
 		void drawTitleScreen();
-		void createSprites();
-		void cutFiguresFromImage(sf::Sprite(&figures)[6], sf::Texture const& tFigures, int const yOffset);
 		void loadFonts();
 
 		float mWitdh;
 		float mHeight;
 		sf::RenderWindow mWindow;
-
-		sf::Texture mTFigures;
-		sf::Sprite mSFiguresWhite[6];
-		sf::Sprite mSFiguresBlack[6];
-
-		sf::Texture mTBoard;
-		sf::Sprite mSBoard;
-
-		sf::Texture mTSelectedField;
-		sf::Sprite mSSelectedField;
+		swe::SpriteHandler mSpriteHandler;
 
 		sf::Font mFont;
 

@@ -164,6 +164,7 @@
     <ClInclude Include="chessBoard.h" />
     <ClInclude Include="chessFigure.h" />
     <ClInclude Include="chessGame.h" />
+    <ClInclude Include="color.h" />
     <ClInclude Include="figureIndex.h" />
     <ClInclude Include="king.h" />
     <ClInclude Include="knight.h" />
@@ -173,6 +174,7 @@
     <ClInclude Include="playerHuman.h" />
     <ClInclude Include="queen.h" />
     <ClInclude Include="rook.h" />
+    <ClInclude Include="spriteHandler.h" />
     <ClInclude Include="text.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

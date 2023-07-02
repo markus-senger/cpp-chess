@@ -8,10 +8,10 @@ namespace swe {
 		mHeight{ 820 },
 		mButtonPlayFriend{ sf::Vector2f(mWitdh / 2, mHeight / 2 - 80), "Images/button_play-with-a-friend.png", "Images/button_hover_play-with-a-friend.png" },
 		mButtonPlayAI(sf::Vector2f(mWitdh / 2, mHeight / 2 + 20), "Images/button_play-with-the-ai.png", "Images/button_hover_play-with-the-ai.png"),
-		mBoard{ *this } {
+		mBoard{ *this },
+		mSpriteHandler{} {
 
 		loadFonts();
-		createSprites();
 		createWindow();
 	}
 
@@ -19,20 +19,8 @@ namespace swe {
 		return mWindow;
 	}
 
-	sf::Sprite& ChessGame::getBoardSprite() {
-		return mSBoard;
-	}
-
-	sf::Sprite& ChessGame::getWhiteFigureSprite(int idx) {
-		return mSFiguresWhite[idx];
-	}
-
-	sf::Sprite& ChessGame::getBlackFigureSprite(int idx) {
-		return mSFiguresBlack[idx];
-	}
-
-	sf::Sprite& ChessGame::getSelectedFieldSprite() {
-		return mSSelectedField;
+	swe::SpriteHandler& ChessGame::getSpriteHandler() {
+		return mSpriteHandler;
 	}
 
 	void ChessGame::setStarted(bool value) {
@@ -98,26 +86,6 @@ namespace swe {
 
 		mButtonPlayFriend.draw(mWindow);
 		mButtonPlayAI.draw(mWindow);
-	}
-
-	void ChessGame::createSprites() {
-		mTFigures.loadFromFile("Images/figures.png");
-
-		cutFiguresFromImage(mSFiguresBlack, mTFigures, 0);
-		cutFiguresFromImage(mSFiguresWhite, mTFigures, 107.5);
-
-		mTBoard.loadFromFile("Images/board.png");
-		mSBoard.setTexture(mTBoard);
-
-		mTSelectedField.loadFromFile("Images/selectedField.png");
-		mSSelectedField.setTexture(mTSelectedField);
-	}
-
-	void ChessGame::cutFiguresFromImage(sf::Sprite(&figures)[6], sf::Texture const& tFigures, int const yOffset) {
-		for (int i = 0; i < 6; i++) {
-			figures[i].setTexture(tFigures);
-			figures[i].setTextureRect(sf::IntRect(99.2 * i, yOffset, 99.2, 107.5));
-		}
 	}
 
 	void ChessGame::loadFonts() {
