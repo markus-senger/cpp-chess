@@ -6,22 +6,13 @@
 namespace swe {
 	class Queen : public ChessFigure {
 	public:
-		Queen(swe::ChessBoard& chessBoard, sf::Sprite& sprite, bool essential)
-			: ChessFigure{ chessBoard, sprite, essential } {
+		Queen(swe::ChessBoard& chessBoard, sf::Sprite& spriteFigrue, sf::Sprite& spriteSelectedField, bool essential, int row, int col)
+			: ChessFigure{ chessBoard, spriteFigrue, spriteSelectedField, essential, row, col } {
 
 		}
 
 		void showSteps() override {
 
-		}
-
-		void move() override {
-
-		}
-
-		void draw(sf::RenderWindow& window, sf::Vector2f pos) override {
-			mSprite.setPosition(pos);
-			window.draw(mSprite);
 		}
 
 	private:

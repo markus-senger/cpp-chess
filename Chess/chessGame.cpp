@@ -31,6 +31,10 @@ namespace swe {
 		return mSFiguresBlack[idx];
 	}
 
+	sf::Sprite& ChessGame::getSelectedFieldSprite() {
+		return mSSelectedField;
+	}
+
 	void ChessGame::setStarted(bool value) {
 		mStarted = value;
 	}
@@ -104,6 +108,9 @@ namespace swe {
 
 		mTBoard.loadFromFile("Images/board.png");
 		mSBoard.setTexture(mTBoard);
+
+		mTSelectedField.loadFromFile("Images/selectedField.png");
+		mSSelectedField.setTexture(mTSelectedField);
 	}
 
 	void ChessGame::cutFiguresFromImage(sf::Sprite(&figures)[6], sf::Texture const& tFigures, int const yOffset) {

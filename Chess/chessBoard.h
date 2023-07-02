@@ -14,11 +14,13 @@ namespace swe {
 		void draw(sf::RenderWindow& window);
 		void handleEvent();
 		void init(std::string const& fen = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR");
+		std::array<std::shared_ptr<swe::ChessFigure>, 64>& getBoardWithFigures();
 
 	private:
 		swe::ChessGame& mChessGame;
 		swe::Button mButtonBack;
-		std::array<std::shared_ptr<swe::ChessFigure>, 64> chessBoard{};
+		std::array<std::shared_ptr<swe::ChessFigure>, 64> mBoardWithFigures{};
+		std::shared_ptr<ChessFigure> mSelectedFigure{};
 
 		void drawHeader(sf::RenderWindow& window);
 	};

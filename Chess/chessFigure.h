@@ -7,21 +7,26 @@ namespace swe {
 
 	class ChessFigure {
 	public:
-		ChessFigure(swe::ChessBoard& chessBoard, sf::Sprite& sprite, bool essential) 
-			: mChessBoard{ chessBoard }, mSprite{ sprite }, mEssential{ essential } {
-
-		}
+		ChessFigure(swe::ChessBoard& chessBoard, sf::Sprite& spriteFigrue, sf::Sprite& spriteSelectedField, bool essential, int row, int col);
 
 		virtual void showSteps() = 0;
-		virtual void move() = 0;
-		virtual void draw(sf::RenderWindow& window, sf::Vector2f pos) = 0;
+		void move(int row, int col);
+
+		void draw(sf::RenderWindow& window, sf::Vector2f pos);
+
+		void setSelected(bool value);
+
+		bool getSelected();
 
 
 	protected:
 		swe::ChessBoard& mChessBoard;
-		sf::Sprite mSprite;
+		sf::Sprite& mSpriteFigure;
+		sf::Sprite& mSpriteSelectedField;
 
 		bool mEssential;
-
+		bool mSelected;
+		int mRow;
+		int mCol;
 	};
 }

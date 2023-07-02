@@ -15,6 +15,7 @@ namespace swe {
 		sf::Sprite& getBoardSprite();
 		sf::Sprite& getWhiteFigureSprite(int idx);
 		sf::Sprite& getBlackFigureSprite(int idx);
+		sf::Sprite& getSelectedFieldSprite();
 
 		void setStarted(bool value);
 
@@ -37,6 +38,9 @@ namespace swe {
 
 		sf::Texture mTBoard;
 		sf::Sprite mSBoard;
+
+		sf::Texture mTSelectedField;
+		sf::Sprite mSSelectedField;
 
 		sf::Font mFont;
 

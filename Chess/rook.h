@@ -6,8 +6,8 @@
 namespace swe {
 	class Rook : public ChessFigure {
 	public:
-		Rook(swe::ChessBoard& chessBoard, sf::Sprite& sprite, bool essential)
-			: ChessFigure{ chessBoard, sprite, essential } {
+		Rook(swe::ChessBoard& chessBoard, sf::Sprite& spriteFigrue, sf::Sprite& spriteSelectedField, bool essential, int row, int col)
+			: ChessFigure{ chessBoard, spriteFigrue, spriteSelectedField, essential, row, col } {
 
 		}
 
@@ -15,14 +15,6 @@ namespace swe {
 
 		}
 
-		void move() override {
-
-		}
-
-		void draw(sf::RenderWindow& window, sf::Vector2f pos) override {
-			mSprite.setPosition(pos);
-			window.draw(mSprite);
-		}
 
 	private:
 
