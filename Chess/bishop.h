@@ -12,12 +12,12 @@ namespace swe {
 		}
 
 		void showSteps(sf::RenderWindow& window) override {
-			// up right
+			// down right
 			for (int i = 1; mRow + i < 8 && mCol + i < 8; i++) {
 				if (mChessBoard.getBoardWithFigures()[((mRow + i) * 8) + (mCol + i)] != nullptr) {
 					if (mChessBoard.getBoardWithFigures()[((mRow + i) * 8) + (mCol + i)]->getColor() != mColor) {
 						sf::Sprite& s = mSpriteHandler.getAttackFieldSprite();
-						s.setPosition(sf::Vector2f((mCol - i) * 85.25 + 60 + 3, (mRow + i) * 85.25 + 60 + 3));
+						s.setPosition(sf::Vector2f((mCol + i) * 85.25 + 60 + 3, (mRow + i) * 85.25 + 60 + 3));
 						window.draw(s);
 					}
 					break;
@@ -28,7 +28,7 @@ namespace swe {
 				window.draw(s);
 			}
 
-			// up left
+			// down left
 			for (int i = 1; mRow + i < 8 && mCol - i >= 0; i++) {
 				if (mChessBoard.getBoardWithFigures()[((mRow + i) * 8) + (mCol - i)] != nullptr) {
 					if (mChessBoard.getBoardWithFigures()[((mRow + i) * 8) + (mCol - i)]->getColor() != mColor) {
@@ -44,7 +44,7 @@ namespace swe {
 				window.draw(s);
 			}
 
-			// down right
+			// top right
 			for (int i = 1; mRow - i >= 0 && mCol + i < 8; i++) {
 				if (mChessBoard.getBoardWithFigures()[((mRow - i) * 8) + (mCol + i)] != nullptr) {
 					if (mChessBoard.getBoardWithFigures()[((mRow - i) * 8) + (mCol + i)]->getColor() != mColor) {
@@ -60,7 +60,7 @@ namespace swe {
 				window.draw(s);
 			}
 
-			// down left
+			// top left
 			for (int i = 1; mRow - i >= 0 && mCol - i >= 0; i++) {
 				if (mChessBoard.getBoardWithFigures()[((mRow - i) * 8) + (mCol - i)] != nullptr) {
 					if (mChessBoard.getBoardWithFigures()[((mRow - i) * 8) + (mCol - i)]->getColor() != mColor) {
