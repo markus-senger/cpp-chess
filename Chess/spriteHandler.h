@@ -1,5 +1,6 @@
 #pragma once
 #include <SFML/Graphics.hpp>
+#include "utils.h"
 
 namespace swe {
 	class SpriteHandler {
@@ -10,6 +11,10 @@ namespace swe {
 
 		sf::Sprite& getBoardSprite() {
 			return mSBoard;
+		}
+
+		sf::Sprite& getPopUpWindowSprite() {
+			return mSPopUpWindow;
 		}
 
 		sf::Sprite& getWhiteFigureSprite(int idx) {
@@ -34,11 +39,14 @@ namespace swe {
 
 	private:
 		sf::Texture mTFigures;
-		sf::Sprite mSFiguresWhite[6];
-		sf::Sprite mSFiguresBlack[6];
+		sf::Sprite mSFiguresWhite[CHESS_NUM_DIFFERENT_FIGURES];
+		sf::Sprite mSFiguresBlack[CHESS_NUM_DIFFERENT_FIGURES];
 
 		sf::Texture mTBoard;
 		sf::Sprite mSBoard;
+
+		sf::Texture mTPopUpWindow;
+		sf::Sprite mSPopUpWindow;
 
 		sf::Texture mTSelectedField;
 		sf::Sprite mSSelectedField;
@@ -52,11 +60,14 @@ namespace swe {
 		void createSprites() {
 			mTFigures.loadFromFile("Images/figures.png");
 
-			cutFiguresFromImage(mSFiguresBlack, mTFigures, 0);
-			cutFiguresFromImage(mSFiguresWhite, mTFigures, 107.5);
+			cutFiguresFromImage(mSFiguresBlack, mTFigures, IMAGE_FIGURES_Y_OFFSET_FIRST_ROW_PX);
+			cutFiguresFromImage(mSFiguresWhite, mTFigures, IMAGE_FIGURES_Y_OFFSET_SECOND_ROW_PX);
 
 			mTBoard.loadFromFile("Images/board.png");
 			mSBoard.setTexture(mTBoard);
+
+			mTPopUpWindow.loadFromFile("Images/popUpWindow.png");
+			mSPopUpWindow.setTexture(mTPopUpWindow);
 
 			mTSelectedField.loadFromFile("Images/selectedField.png");
 			mSSelectedField.setTexture(mTSelectedField);
@@ -71,7 +82,7 @@ namespace swe {
 		void cutFiguresFromImage(sf::Sprite(&figures)[6], sf::Texture const& tFigures, int const yOffset) {
 			for (int i = 0; i < 6; i++) {
 				figures[i].setTexture(tFigures);
-				figures[i].setTextureRect(sf::IntRect(99.2 * i, yOffset, 99.2, 107.5));
+				figures[i].setTextureRect(sf::IntRect(IMAGE_FIGURES_WITDH_PX * i, yOffset, IMAGE_FIGURES_WITDH_PX, IMAGE_FIGURES_HEIGHT_PX));
 			}
 		}
 	};

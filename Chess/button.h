@@ -5,6 +5,9 @@
 namespace swe {
     class Button {
     public:
+        Button(std::string const path, std::string const pathMouseOver) : Button(sf::Vector2f(0, 0), path, pathMouseOver) {
+        }
+
         Button(sf::Vector2f const& position, std::string const path, std::string const pathMouseOver) {
             mTexture.loadFromFile(path);
             mSprite.setTexture(mTexture);
@@ -17,6 +20,11 @@ namespace swe {
             mSpriteMouseOver.setTexture(mTextureMouseOver);
             mSpriteMouseOver.setPosition(position);
             mSpriteMouseOver.setOrigin(spriteSize / 2.001f); // with 2.0 there seems to be a pixel bug
+        }
+
+        void setPosition(sf::Vector2f const& position) {
+            mSprite.setPosition(position);
+            mSpriteMouseOver.setPosition(position);
         }
 
         void draw(sf::RenderWindow& window) {
