@@ -86,5 +86,11 @@
     <ClInclude Include="color.h">
       <Filter>Headerdateien\Figures</Filter>
     </ClInclude>
+    <ClInclude Include="graveyard.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="utils.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

@@ -16,35 +16,46 @@ namespace swe {
 
             int newRow = mRow + direction;
             int newCol = mCol;
-            if (newRow >= 0 && newRow < 8 && newCol >= 0 && newCol < 8 && mChessBoard.getBoardWithFigures()[(newRow * 8) + newCol] == nullptr) {
+            if (newRow >= 0 && newRow < CHESS_SIZE && newCol >= 0 && newCol < CHESS_SIZE && 
+                    mChessBoard.getBoardWithFigures()[(newRow * CHESS_SIZE) + newCol] == nullptr) {
+
                 sf::Sprite& s = mSpriteHandler.getPossibleMoveSprite();
-                s.setPosition(sf::Vector2f(newCol * 85.25 + 60 + 25, newRow * 85.25 + 60 + 25));
+                s.setPosition(sf::Vector2f(newCol * CHESS_FIELD_SIZE_PX + CHESS_BOARD_WITDH_OFFSET_PX + MOVE_SYMBOL_POSSIBLE_MOVE_OFFSET_PX, newRow * CHESS_FIELD_SIZE_PX + CHESS_BOARD_HEIGHT_OFFSET_PX + MOVE_SYMBOL_POSSIBLE_MOVE_OFFSET_PX));
                 window.draw(s);
             }
 
-            if ((mColor == Color::white && mRow == 6) || (mColor == Color::black && mRow == 1)) {
+            if ((mColor == Color::white && mRow == START_ROW_NUM_FOR_WHITE_PAWN) || (mColor == Color::black && mRow == START_ROW_NUM_FOR_BLACK_PAWN)) {
                 newRow = mRow + (2 * direction);
                 newCol = mCol;
-                if (newRow >= 0 && newRow < 8 && newCol >= 0 && newCol < 8 && mChessBoard.getBoardWithFigures()[(newRow * 8) + newCol] == nullptr && mChessBoard.getBoardWithFigures()[((newRow - direction) * 8) + newCol] == nullptr) {
+                if (newRow >= 0 && newRow < CHESS_SIZE && newCol >= 0 && newCol < CHESS_SIZE && 
+                        mChessBoard.getBoardWithFigures()[(newRow * CHESS_SIZE) + newCol] == nullptr &&
+                        mChessBoard.getBoardWithFigures()[((newRow - direction) * CHESS_SIZE) + newCol] == nullptr) {
+
                     sf::Sprite& s = mSpriteHandler.getPossibleMoveSprite();
-                    s.setPosition(sf::Vector2f(newCol * 85.25 + 60 + 25, newRow * 85.25 + 60 + 25));
+                    s.setPosition(sf::Vector2f(newCol * CHESS_FIELD_SIZE_PX + CHESS_BOARD_WITDH_OFFSET_PX + MOVE_SYMBOL_POSSIBLE_MOVE_OFFSET_PX, newRow * CHESS_FIELD_SIZE_PX + CHESS_BOARD_HEIGHT_OFFSET_PX + MOVE_SYMBOL_POSSIBLE_MOVE_OFFSET_PX));
                     window.draw(s);
                 }
             }
 
             newRow = mRow + direction;
             newCol = mCol - 1;
-            if (newRow >= 0 && newRow < 8 && newCol >= 0 && newCol < 8 && mChessBoard.getBoardWithFigures()[(newRow * 8) + newCol] != nullptr && mChessBoard.getBoardWithFigures()[(newRow * 8) + newCol]->getColor() != mColor) {
+            if (newRow >= 0 && newRow < CHESS_SIZE && newCol >= 0 && newCol < CHESS_SIZE && 
+                    mChessBoard.getBoardWithFigures()[(newRow * CHESS_SIZE) + newCol] != nullptr &&
+                    mChessBoard.getBoardWithFigures()[(newRow * CHESS_SIZE) + newCol]->getColor() != mColor) {
+
                 sf::Sprite& s = mSpriteHandler.getAttackFieldSprite();
-                s.setPosition(sf::Vector2f(newCol * 85.25 + 60 + 3, newRow * 85.25 + 60 + 3));
+                s.setPosition(sf::Vector2f(newCol * CHESS_FIELD_SIZE_PX + CHESS_BOARD_WITDH_OFFSET_PX + MOVE_SYMBOL_ATTACK_FIELD_OFFSET_PX, newRow * CHESS_FIELD_SIZE_PX + CHESS_BOARD_HEIGHT_OFFSET_PX + MOVE_SYMBOL_ATTACK_FIELD_OFFSET_PX));
                 window.draw(s);
             }
 
             newRow = mRow + direction;
             newCol = mCol + 1;
-            if (newRow >= 0 && newRow < 8 && newCol >= 0 && newCol < 8 && mChessBoard.getBoardWithFigures()[(newRow * 8) + newCol] != nullptr && mChessBoard.getBoardWithFigures()[(newRow * 8) + newCol]->getColor() != mColor) {
+            if (newRow >= 0 && newRow < CHESS_SIZE && newCol >= 0 && newCol < CHESS_SIZE && 
+                    mChessBoard.getBoardWithFigures()[(newRow * CHESS_SIZE) + newCol] != nullptr && 
+                    mChessBoard.getBoardWithFigures()[(newRow * CHESS_SIZE) + newCol]->getColor() != mColor) {
+
                 sf::Sprite& s = mSpriteHandler.getAttackFieldSprite();
-                s.setPosition(sf::Vector2f(newCol * 85.25 + 60 + 3, newRow * 85.25 + 60 + 3));
+                s.setPosition(sf::Vector2f(newCol * CHESS_FIELD_SIZE_PX + CHESS_BOARD_WITDH_OFFSET_PX + MOVE_SYMBOL_ATTACK_FIELD_OFFSET_PX, newRow * CHESS_FIELD_SIZE_PX + CHESS_BOARD_HEIGHT_OFFSET_PX + MOVE_SYMBOL_ATTACK_FIELD_OFFSET_PX));
                 window.draw(s);
             }
 		}

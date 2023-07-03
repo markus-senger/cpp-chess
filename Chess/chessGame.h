@@ -7,6 +7,7 @@
 #include "playerAI.h"
 #include "chessBoard.h"
 #include "spriteHandler.h"
+#include "color.h"
 
 namespace swe {
 	class ChessGame {
@@ -15,11 +16,13 @@ namespace swe {
 		sf::RenderWindow& getWindow();
 		swe::SpriteHandler& getSpriteHandler();
 		void setStarted(bool value);
+		void setEnd(bool value, swe::Color winColor);
 
 
 	private:
 		void createWindow();
 		void draw();
+		void drawEndScreen();
 		void drawTitleScreen();
 		void loadFonts();
 
@@ -31,9 +34,13 @@ namespace swe {
 		sf::Font mFont;
 
 		bool mStarted;
+		bool mEnd;
+		swe::Color mWinColor;
 
 		swe::Button mButtonPlayFriend;
 		swe::Button mButtonPlayAI;
+		swe::Button mButtonBack;
+		swe::Button mButtonBackToMenu;
 
 		swe::Player mPlayer1;
 		swe::Player mPlayer2;

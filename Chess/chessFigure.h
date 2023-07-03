@@ -16,11 +16,15 @@ namespace swe {
 
 		void draw(sf::RenderWindow& window, sf::Vector2f pos);
 
+		void scale(sf::Vector2f scaleFactor);
+
 		void setSelected(bool value);
 
 		bool getSelected();
 
 		swe::Color getColor();
+
+		float getHeight();
 
 
 	protected:

@@ -1,7 +1,24 @@
 #pragma once
 
+#include <string>
+
 namespace swe {
 	enum class Color {
-		black, white
+		none, black, white
 	};
+
+    static std::string colorToString(Color value)
+    {
+        switch (value)
+        {
+            case Color::none:
+                return "none";
+            case Color::black:
+                return "black";
+            case Color::white:
+                return "white";
+            default:
+                return "Unknown";
+        }
+    }
 }

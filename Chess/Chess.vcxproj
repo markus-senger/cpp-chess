@@ -166,6 +166,7 @@
     <ClInclude Include="chessGame.h" />
     <ClInclude Include="color.h" />
     <ClInclude Include="figureIndex.h" />
+    <ClInclude Include="graveyard.h" />
     <ClInclude Include="king.h" />
     <ClInclude Include="knight.h" />
     <ClInclude Include="pawn.h" />
@@ -176,6 +177,7 @@
     <ClInclude Include="rook.h" />
     <ClInclude Include="spriteHandler.h" />
     <ClInclude Include="text.h" />
+    <ClInclude Include="utils.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
