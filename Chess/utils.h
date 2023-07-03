@@ -26,6 +26,7 @@ namespace swe {
 	const int			BUTTON_MENU_FIRST_ROW_OFFSET_FROM_CENTER_PX		= -80;
 	const int			BUTTON_MENU_SECOND_ROW_OFFSET_FROM_CENTER_PX	= 20;
 	const sf::Vector2f	BACK_BUTTON_POSITION_V							= sf::Vector2f(50, 30);
+	const sf::Vector2f	TURN_INFO_POSITION_V							= sf::Vector2f(310, 13);
 	const int			POPUP_WINDOW_FIRST_ROW_OFFSET_FROM_CENTER_PX	= -50;
 	const int			POPUP_WINDOW_THIRD_ROW_OFFSET_FROM_CENTER_PX	= 50;
 

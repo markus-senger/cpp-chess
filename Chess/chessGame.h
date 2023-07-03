@@ -42,8 +42,8 @@ namespace swe {
 		swe::Button mButtonBack;
 		swe::Button mButtonBackToMenu;
 
-		swe::Player mPlayer1;
-		swe::Player mPlayer2;
+		std::unique_ptr<swe::Player> mPlayer1;
+		std::unique_ptr<swe::Player> mPlayer2;
 
 		swe::ChessBoard mBoard;
 	};

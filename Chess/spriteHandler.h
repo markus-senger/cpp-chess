@@ -13,6 +13,14 @@ namespace swe {
 			return mSBoard;
 		}
 
+		sf::Sprite& getTurnInfoBlack() {
+			return mSTurnInfoBlack;
+		}
+
+		sf::Sprite& getTurnInfoWhite() {
+			return mSTurnInfoWhite;
+		}
+
 		sf::Sprite& getPopUpWindowSprite() {
 			return mSPopUpWindow;
 		}
@@ -45,6 +53,12 @@ namespace swe {
 		sf::Texture mTBoard;
 		sf::Sprite mSBoard;
 
+		sf::Texture mTTurnInfoBlack;
+		sf::Sprite mSTurnInfoBlack;
+
+		sf::Texture mTTurnInfoWhite;
+		sf::Sprite mSTurnInfoWhite;
+
 		sf::Texture mTPopUpWindow;
 		sf::Sprite mSPopUpWindow;
 
@@ -65,6 +79,12 @@ namespace swe {
 
 			mTBoard.loadFromFile("Images/board.png");
 			mSBoard.setTexture(mTBoard);
+
+			mTTurnInfoBlack.loadFromFile("Images/turnInfo_black.png");
+			mSTurnInfoBlack.setTexture(mTTurnInfoBlack);
+
+			mTTurnInfoWhite.loadFromFile("Images/turnInfo_white.png");
+			mSTurnInfoWhite.setTexture(mTTurnInfoWhite);
 
 			mTPopUpWindow.loadFromFile("Images/popUpWindow.png");
 			mSPopUpWindow.setTexture(mTPopUpWindow);

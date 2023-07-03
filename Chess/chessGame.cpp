@@ -63,27 +63,26 @@ namespace swe {
 						mBoard.init();
 						if (mButtonPlayFriend.isMouseOver(static_cast<sf::Vector2f>(sf::Mouse::getPosition(mWindow)))) {
 							mStarted = true;
-							mPlayer1 = PlayerHuman();
-							mPlayer2 = PlayerHuman();
+							mPlayer1 = std::make_unique<PlayerHuman>(swe::Color::white, true, mBoard);
+							mPlayer2 = std::make_unique<PlayerHuman>(swe::Color::black, false, mBoard);
 						}
 						else if (mButtonPlayAI.isMouseOver(static_cast<sf::Vector2f>(sf::Mouse::getPosition(mWindow)))) {
 							mStarted = true;
-							mPlayer1 = PlayerHuman();
-							mPlayer2 = PlayerAI();
+							mPlayer1 = std::make_unique<PlayerHuman>(swe::Color::white, true, mBoard);
+							mPlayer2 = std::make_unique<PlayerAI>(swe::Color::black, false, mBoard);
 						}
 					}
 					else if (evt.key.code == sf::Mouse::Left && mStarted) {
 						if (mButtonBack.isMouseOver(static_cast<sf::Vector2f>(sf::Mouse::getPosition(mWindow)))) {
 							mStarted = false;
 						}
-						mBoard.handleEvent();
+						if (mPlayer1->turn()) mPlayer2->setTurn(true);
+						if (mPlayer2->turn()) mPlayer1->setTurn(true);
 					}
 				}
-
 			}
-			mWindow.clear(sf::Color::White);
 
-			// TODO
+			mWindow.clear(sf::Color::White);
 
 			draw();
 
@@ -95,6 +94,17 @@ namespace swe {
 		if (!mStarted)
 			drawTitleScreen();
 		else {
+			if (mPlayer1->getTurn()) {
+				sf::Sprite& turnInfo = mSpriteHandler.getTurnInfoWhite();
+				turnInfo.setPosition(TURN_INFO_POSITION_V);
+				mWindow.draw(turnInfo);
+			}
+			else if (mPlayer2->getTurn()) {
+				sf::Sprite& turnInfo = mSpriteHandler.getTurnInfoBlack();
+				turnInfo.setPosition(TURN_INFO_POSITION_V);
+				mWindow.draw(turnInfo);
+			}
+
 			mButtonBack.draw(mWindow);
 			mBoard.draw(mWindow);
 			if (mEnd)

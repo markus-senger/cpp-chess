@@ -13,7 +13,7 @@ namespace swe {
 	public:
 		ChessBoard(swe::ChessGame& chessGame);
 		void draw(sf::RenderWindow& window);
-		void handleEvent();
+		bool handleEvent(swe::Color currentColor);
 		void init(std::string const& fen = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR");
 		std::array<std::shared_ptr<swe::ChessFigure>, 64>& getBoardWithFigures();
 		void setEnd(bool value, swe::Color winColor);

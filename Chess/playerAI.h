@@ -5,7 +5,12 @@
 namespace swe {
 	class PlayerAI : public Player {
 	public:
-		PlayerAI() = default;
+		PlayerAI(swe::Color color, bool turn, swe::ChessBoard& board) : Player(color, turn, board) {}
+
+		bool turn() override {
+			return true;
+		}
+
 	private:
 	};
 }

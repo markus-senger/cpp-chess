@@ -42,7 +42,7 @@ namespace swe {
                 (calcRowFromIdx(j)) * CHESS_FIELD_SIZE_PX + CHESS_BOARD_HEIGHT_OFFSET_PX));
 	}
 
-	void ChessBoard::handleEvent() {
+	bool ChessBoard::handleEvent(swe::Color currentColor) {
         sf::Vector2i mousePos = sf::Mouse::getPosition(mChessGame.getWindow());
   
         int i = 0;
@@ -55,8 +55,9 @@ namespace swe {
                 else if (mSelectedFigure != nullptr) {
                     mSelectedFigure->move(calcRowFromIdx(i), calcColFromIdx(i));
                     mSelectedFigure = nullptr;
+                    return true;
                 }
-                else if (figure != nullptr) {
+                else if (figure != nullptr && figure->getColor() == currentColor) {
                     figure->setSelected(true);
                     mSelectedFigure = figure;
                 }
@@ -66,8 +67,7 @@ namespace swe {
 
             i++;
         }
-
-        
+        return false;  
 	}
 
 	void ChessBoard::init(std::string const& fen) {
