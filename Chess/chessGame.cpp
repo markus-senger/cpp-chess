@@ -76,8 +76,14 @@ namespace swe {
 						if (mButtonBack.isMouseOver(static_cast<sf::Vector2f>(sf::Mouse::getPosition(mWindow)))) {
 							mStarted = false;
 						}
-						if (mPlayer1->turn()) mPlayer2->setTurn(true);
-						if (mPlayer2->turn()) mPlayer1->setTurn(true);
+						if (mPlayer1->turn()) {
+							mPlayer2->setTurn(mEnd ? false : true);
+							mPlayer1->setTurn(false);
+						}
+						if (mPlayer2->turn()) {
+							mPlayer1->setTurn(mEnd ? false : true);
+							mPlayer2->setTurn(false);
+						}
 					}
 				}
 			}

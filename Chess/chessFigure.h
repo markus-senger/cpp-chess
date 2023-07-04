@@ -17,7 +17,9 @@ namespace swe {
 		virtual std::vector<std::pair<int, bool>> getPossibleSteps(std::array<std::shared_ptr<swe::ChessFigure>, CHESS_NUM_OF_FIELDS> const& board, bool withIsKingThreatened = true) = 0;
 
 		virtual bool isKingThreatened(int orgRow, int orgCol, int row, int col);
-		
+
+		void initPossibleSteps();
+
 		void showPossibleSteps(sf::RenderWindow& window);
 
 		virtual std::vector<int> getAttackSteps(std::array<std::shared_ptr<swe::ChessFigure>, CHESS_NUM_OF_FIELDS> const& board);

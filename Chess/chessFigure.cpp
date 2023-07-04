@@ -9,8 +9,12 @@ namespace swe {
 
 	}
 
-	void ChessFigure::showPossibleSteps(sf::RenderWindow& window) {
+	void ChessFigure::initPossibleSteps() {
 		mCurPossibleSteps = getPossibleSteps(mChessBoard.getBoardWithFigures());
+	}
+
+	void ChessFigure::showPossibleSteps(sf::RenderWindow& window) {
+		initPossibleSteps();
 		for (auto entry : mCurPossibleSteps) {
 			if (entry.second) {
 				sf::Sprite& s = mSpriteHandler.getAttackFieldSprite();
