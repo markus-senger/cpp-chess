@@ -28,6 +28,8 @@ namespace swe {
 
 		void setSelected(bool value);
 
+		virtual void setCheck(bool value);
+
 		bool getSelected();
 
 		swe::FigureIndex getType();

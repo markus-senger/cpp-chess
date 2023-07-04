@@ -42,10 +42,20 @@ namespace swe {
 		mSelected = false;
 
 		auto blackKing = mChessBoard.getKing(swe::Color::black);
-		blackKing->isKingThreatened(blackKing->getRow(), blackKing->getCol(), blackKing->getRow(), blackKing->getCol());
+		if (blackKing->isKingThreatened(blackKing->getRow(), blackKing->getCol(), blackKing->getRow(), blackKing->getCol())) {
+			blackKing->setCheck(true);
+		}
+		else {
+			blackKing->setCheck(false);
+		}
 
 		auto whiteKing = mChessBoard.getKing(swe::Color::white);
-		whiteKing->isKingThreatened(whiteKing->getRow(), whiteKing->getCol(), whiteKing->getRow(), whiteKing->getCol());
+		if (whiteKing->isKingThreatened(whiteKing->getRow(), whiteKing->getCol(), whiteKing->getRow(), whiteKing->getCol())) {
+			whiteKing->setCheck(true);
+		}
+		else {
+			whiteKing->setCheck(false);
+		}
 	}
 
 	void ChessFigure::draw(sf::RenderWindow& window, sf::Vector2f pos) {
@@ -68,6 +78,10 @@ namespace swe {
 
 	void ChessFigure::setSelected(bool value) {
 		mSelected = value;
+	}
+
+	void ChessFigure::setCheck(bool value) {
+		throw std::logic_error("function not implemented");
 	}
 
 	bool ChessFigure::getSelected() {

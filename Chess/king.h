@@ -63,7 +63,6 @@ namespace swe {
                         if (step.first == convTo1D(curKingRow, curKingCol)) {
                             board[convTo1D(orgRow, orgCol)] = board[convTo1D(row, col)];
                             board[convTo1D(row, col)] = copyField;
-                            mCheck = true;
                             return true;
                         }
                     }
@@ -72,9 +71,12 @@ namespace swe {
 
             board[convTo1D(orgRow, orgCol)] = board[convTo1D(row, col)];
             board[convTo1D(row, col)] = copyField;
-            mCheck = false;
 
             return false;  
+        }
+
+        void setCheck(bool value) {
+            mCheck = value;
         }
 
     private:
