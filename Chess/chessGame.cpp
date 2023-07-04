@@ -117,7 +117,7 @@ namespace swe {
 		popUpWindow.setPosition(mWitdh / 2 - popUpWindow.getLocalBounds().width / 2, mHeight / 2 - popUpWindow.getLocalBounds().height / 2);
 
 		swe::Text endText(sf::Vector2f(mWitdh / 2, mHeight / 2 + POPUP_WINDOW_FIRST_ROW_OFFSET_FROM_CENTER_PX), mFont, 24, "End!");
-		swe::Text winnerText(sf::Vector2f(mWitdh / 2, mHeight / 2), mFont, 20, colorToString(mWinColor) + " wins!");
+		swe::Text winnerText(sf::Vector2f(mWitdh / 2, mHeight / 2), mFont, 20, mWinColor == swe::Color::none ? "remis!" : colorToString(mWinColor) + " wins!");
 
 		mButtonBackToMenu.setPosition(sf::Vector2f(mWitdh / 2, mHeight / 2 + POPUP_WINDOW_THIRD_ROW_OFFSET_FROM_CENTER_PX));
 

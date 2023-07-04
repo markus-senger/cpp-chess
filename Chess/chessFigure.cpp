@@ -51,20 +51,33 @@ namespace swe {
 		mCol = col;
 		mSelected = false;
 
-		auto blackKing = mChessBoard.getKing(swe::Color::black);
-		if (blackKing->isKingThreatened(blackKing->getRow(), blackKing->getCol(), blackKing->getRow(), blackKing->getCol())) {
-			blackKing->setCheck(true);
-		}
-		else {
-			blackKing->setCheck(false);
-		}
+		checkEnd(swe::Color::black);
+		checkEnd(swe::Color::white);
+	}
 
-		auto whiteKing = mChessBoard.getKing(swe::Color::white);
-		if (whiteKing->isKingThreatened(whiteKing->getRow(), whiteKing->getCol(), whiteKing->getRow(), whiteKing->getCol())) {
-			whiteKing->setCheck(true);
+	void ChessFigure::checkEnd(swe::Color color) {
+		auto king = mChessBoard.getKing(color);
+		if (king->isKingThreatened(king->getRow(), king->getCol(), king->getRow(), king->getCol())) {
+			king->setCheck(true);
+
+			int cntPossibleMoves = 0;
+			for (auto& figure : mChessBoard.getBoardWithFigures()) {
+				if (figure != nullptr && figure->getColor() == color)
+					cntPossibleMoves += figure->getPossibleSteps(mChessBoard.getBoardWithFigures()).size();
+			}
+			if (cntPossibleMoves <= 0)
+				mChessBoard.setEnd(true, color == swe::Color::white ? swe::Color::black : swe::Color::white);
 		}
 		else {
-			whiteKing->setCheck(false);
+			king->setCheck(false);
+
+			int cntPossibleMoves = 0;
+			for (auto& figure : mChessBoard.getBoardWithFigures()) {
+				if (figure != nullptr && figure->getColor() == color)
+					cntPossibleMoves += figure->getPossibleSteps(mChessBoard.getBoardWithFigures()).size();
+			}
+			if (cntPossibleMoves <= 0)
+				mChessBoard.setEnd(true, swe::Color::none);
 		}
 	}
 

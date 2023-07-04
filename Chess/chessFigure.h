@@ -56,5 +56,8 @@ namespace swe {
 		bool mSelected;
 		int mRow;
 		int mCol;
+
+		void checkEnd(swe::Color color);
+		
 	};
 }
