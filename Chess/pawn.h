@@ -4,63 +4,75 @@
 #include "chessFigure.h"
 
 namespace swe {
-	class Pawn : public ChessFigure {
-	public:
-		Pawn(swe::ChessBoard& chessBoard, swe::SpriteHandler& spriteHandler, sf::Sprite figureSprite, bool essential, swe::Color color, int row, int col)
-            : ChessFigure{ chessBoard, spriteHandler, figureSprite, essential, color, row, col } {
+    class Pawn : public ChessFigure {
+    public:
+        Pawn(swe::ChessBoard& chessBoard, swe::SpriteHandler& spriteHandler, sf::Sprite figureSprite, bool essential, swe::Color color, int row, int col)
+            : ChessFigure{ chessBoard, spriteHandler, figureSprite, essential, swe::FigureIndex::pawn, color, row, col } {
 
-		}
+        }
 
-		void showSteps(sf::RenderWindow& window) override {
+        std::vector<std::pair<int, bool>> getPossibleSteps(std::array<std::shared_ptr<swe::ChessFigure>, CHESS_NUM_OF_FIELDS> const& board, bool withIsKingThreatened = true) override {
+            std::vector<std::pair<int, bool>> possibleMoves{};
+
             int direction = (mColor == Color::white) ? -1 : 1;
 
             int newRow = mRow + direction;
             int newCol = mCol;
-            if (newRow >= 0 && newRow < CHESS_SIZE && newCol >= 0 && newCol < CHESS_SIZE && 
-                    mChessBoard.getBoardWithFigures()[(newRow * CHESS_SIZE) + newCol] == nullptr) {
 
-                sf::Sprite& s = mSpriteHandler.getPossibleMoveSprite();
-                s.setPosition(sf::Vector2f(newCol * CHESS_FIELD_SIZE_PX + CHESS_BOARD_WITDH_OFFSET_PX + MOVE_SYMBOL_POSSIBLE_MOVE_OFFSET_PX, newRow * CHESS_FIELD_SIZE_PX + CHESS_BOARD_HEIGHT_OFFSET_PX + MOVE_SYMBOL_POSSIBLE_MOVE_OFFSET_PX));
-                window.draw(s);
-            }
+            auto king = mChessBoard.getKing(mColor);
 
-            if ((mColor == Color::white && mRow == START_ROW_NUM_FOR_WHITE_PAWN) || (mColor == Color::black && mRow == START_ROW_NUM_FOR_BLACK_PAWN)) {
-                newRow = mRow + (2 * direction);
-                newCol = mCol;
-                if (newRow >= 0 && newRow < CHESS_SIZE && newCol >= 0 && newCol < CHESS_SIZE && 
-                        mChessBoard.getBoardWithFigures()[(newRow * CHESS_SIZE) + newCol] == nullptr &&
-                        mChessBoard.getBoardWithFigures()[((newRow - direction) * CHESS_SIZE) + newCol] == nullptr) {
+            // normal forward
+            if (newRow >= 0 && newRow < CHESS_SIZE && newCol >= 0 && newCol < CHESS_SIZE &&
+                board[(newRow * CHESS_SIZE) + newCol] == nullptr) {
 
-                    sf::Sprite& s = mSpriteHandler.getPossibleMoveSprite();
-                    s.setPosition(sf::Vector2f(newCol * CHESS_FIELD_SIZE_PX + CHESS_BOARD_WITDH_OFFSET_PX + MOVE_SYMBOL_POSSIBLE_MOVE_OFFSET_PX, newRow * CHESS_FIELD_SIZE_PX + CHESS_BOARD_HEIGHT_OFFSET_PX + MOVE_SYMBOL_POSSIBLE_MOVE_OFFSET_PX));
-                    window.draw(s);
+                bool threatened = withIsKingThreatened ? king->isKingThreatened(mRow, mCol, newRow, newCol) : false;
+                if (!threatened) {
+                    possibleMoves.push_back(std::make_pair(convTo1D(newRow, newCol), false));
                 }
             }
 
+            // first move forward
+            if ((mColor == Color::white && mRow == START_ROW_NUM_FOR_WHITE_PAWN) || (mColor == Color::black && mRow == START_ROW_NUM_FOR_BLACK_PAWN)) {
+                newRow = mRow + (2 * direction);
+                newCol = mCol;
+                if (newRow >= 0 && newRow < CHESS_SIZE && newCol >= 0 && newCol < CHESS_SIZE &&
+                    board[(newRow * CHESS_SIZE) + newCol] == nullptr &&
+                    board[((newRow - direction) * CHESS_SIZE) + newCol] == nullptr) {
+
+                    bool threatened = withIsKingThreatened ? king->isKingThreatened(mRow, mCol, newRow, newCol) : false;
+                    if (!threatened) {
+                        possibleMoves.push_back(std::make_pair(convTo1D(newRow, newCol), false));
+                    }
+                }
+            }
+
+            // attack left
             newRow = mRow + direction;
             newCol = mCol - 1;
-            if (newRow >= 0 && newRow < CHESS_SIZE && newCol >= 0 && newCol < CHESS_SIZE && 
-                    mChessBoard.getBoardWithFigures()[(newRow * CHESS_SIZE) + newCol] != nullptr &&
-                    mChessBoard.getBoardWithFigures()[(newRow * CHESS_SIZE) + newCol]->getColor() != mColor) {
+            if (newRow >= 0 && newRow < CHESS_SIZE && newCol >= 0 && newCol < CHESS_SIZE &&
+                board[(newRow * CHESS_SIZE) + newCol] != nullptr &&
+                board[(newRow * CHESS_SIZE) + newCol]->getColor() != mColor) {
 
-                sf::Sprite& s = mSpriteHandler.getAttackFieldSprite();
-                s.setPosition(sf::Vector2f(newCol * CHESS_FIELD_SIZE_PX + CHESS_BOARD_WITDH_OFFSET_PX + MOVE_SYMBOL_ATTACK_FIELD_OFFSET_PX, newRow * CHESS_FIELD_SIZE_PX + CHESS_BOARD_HEIGHT_OFFSET_PX + MOVE_SYMBOL_ATTACK_FIELD_OFFSET_PX));
-                window.draw(s);
+                bool threatened = withIsKingThreatened ? king->isKingThreatened(mRow, mCol, newRow, newCol) : false;
+                if (!threatened) {
+                    possibleMoves.push_back(std::make_pair(convTo1D(newRow, newCol), true));
+                }
             }
 
+            // attack right
             newRow = mRow + direction;
             newCol = mCol + 1;
-            if (newRow >= 0 && newRow < CHESS_SIZE && newCol >= 0 && newCol < CHESS_SIZE && 
-                    mChessBoard.getBoardWithFigures()[(newRow * CHESS_SIZE) + newCol] != nullptr && 
-                    mChessBoard.getBoardWithFigures()[(newRow * CHESS_SIZE) + newCol]->getColor() != mColor) {
+            if (newRow >= 0 && newRow < CHESS_SIZE && newCol >= 0 && newCol < CHESS_SIZE &&
+                board[(newRow * CHESS_SIZE) + newCol] != nullptr &&
+                board[(newRow * CHESS_SIZE) + newCol]->getColor() != mColor) {
 
-                sf::Sprite& s = mSpriteHandler.getAttackFieldSprite();
-                s.setPosition(sf::Vector2f(newCol * CHESS_FIELD_SIZE_PX + CHESS_BOARD_WITDH_OFFSET_PX + MOVE_SYMBOL_ATTACK_FIELD_OFFSET_PX, newRow * CHESS_FIELD_SIZE_PX + CHESS_BOARD_HEIGHT_OFFSET_PX + MOVE_SYMBOL_ATTACK_FIELD_OFFSET_PX));
-                window.draw(s);
+                bool threatened = withIsKingThreatened ? king->isKingThreatened(mRow, mCol, newRow, newCol) : false;
+                if (!threatened) {
+                    possibleMoves.push_back(std::make_pair(convTo1D(newRow, newCol), true));
+                }
             }
-		}
 
-	private:
-
-	};
+            return possibleMoves;
+        }
+    };
 }

@@ -45,6 +45,10 @@ namespace swe {
 			return mSAttackField;
 		}
 
+		sf::Sprite& getCheckFieldSprite() {
+			return mSCheckField;
+		}
+
 	private:
 		sf::Texture mTFigures;
 		sf::Sprite mSFiguresWhite[CHESS_NUM_DIFFERENT_FIGURES];
@@ -70,6 +74,9 @@ namespace swe {
 
 		sf::Texture mTAttackField;
 		sf::Sprite mSAttackField;
+
+		sf::Texture mTCheckField;
+		sf::Sprite mSCheckField;
 
 		void createSprites() {
 			mTFigures.loadFromFile("Images/figures.png");
@@ -97,6 +104,9 @@ namespace swe {
 
 			mTAttackField.loadFromFile("Images/attackField.png");
 			mSAttackField.setTexture(mTAttackField);
+
+			mTCheckField.loadFromFile("Images/checkField.png");
+			mSCheckField.setTexture(mTCheckField);
 		}
 
 		void cutFiguresFromImage(sf::Sprite(&figures)[6], sf::Texture const& tFigures, int const yOffset) {

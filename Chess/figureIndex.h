@@ -1,7 +1,7 @@
 #pragma once
 
 namespace swe {
-	enum FigureIndex {
-		rook, knight, bishop, queen, king, pawn
+	enum class FigureIndex : int {
+		rook = 0, knight = 1, bishop = 2, queen = 3, king = 4, pawn = 5
 	};
 }

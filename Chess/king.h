@@ -4,14 +4,25 @@
 #include "chessFigure.h"
 
 namespace swe {
-	class King : public ChessFigure {
-	public:
-		King(swe::ChessBoard& chessBoard, swe::SpriteHandler& spriteHandler, sf::Sprite figureSprite, bool essential, swe::Color color, int row, int col)
-			: ChessFigure{ chessBoard, spriteHandler, figureSprite, essential, color, row, col } {
+    class King : public ChessFigure {
+    public:
+        King(swe::ChessBoard& chessBoard, swe::SpriteHandler& spriteHandler, sf::Sprite figureSprite, bool essential, swe::Color color, int row, int col)
+            : ChessFigure{ chessBoard, spriteHandler, figureSprite, essential, swe::FigureIndex::king, color, row, col } {
 
-		}
+        }
 
-		void showSteps(sf::RenderWindow& window) override {
+        void draw(sf::RenderWindow& window, sf::Vector2f pos) override {
+            if (mCheck) {
+                sf::Sprite& s = mSpriteHandler.getCheckFieldSprite();
+                s.setPosition(sf::Vector2f(mCol * CHESS_FIELD_SIZE_PX + CHESS_BOARD_WITDH_OFFSET_PX + MOVE_SYMBOL_ATTACK_FIELD_OFFSET_PX, mRow * CHESS_FIELD_SIZE_PX + CHESS_BOARD_HEIGHT_OFFSET_PX + MOVE_SYMBOL_ATTACK_FIELD_OFFSET_PX));
+                window.draw(s);
+            }
+            ChessFigure::draw(window, pos);
+        }
+
+        std::vector<std::pair<int, bool>> getPossibleSteps(std::array<std::shared_ptr<swe::ChessFigure>, CHESS_NUM_OF_FIELDS> const& board, bool withIsKingThreatened = true) override {
+            std::vector<std::pair<int, bool>> possibleMoves{};
+
             int dx[NUM_POSSIBLE_MOVES_KING] = { 1, 1, 1, 0, 0, -1, -1, -1 };
             int dy[NUM_POSSIBLE_MOVES_KING] = { 1, 0, -1, 1, -1, 1, 0, -1 };
 
@@ -20,21 +31,53 @@ namespace swe {
                 int newCol = mCol + dx[i];
 
                 if (newRow >= 0 && newRow < CHESS_SIZE && newCol >= 0 && newCol < 8) {
-                    if (mChessBoard.getBoardWithFigures()[(newRow * CHESS_SIZE) + newCol] == nullptr) {
-                        sf::Sprite& s = mSpriteHandler.getPossibleMoveSprite();
-                        s.setPosition(sf::Vector2f(newCol * CHESS_FIELD_SIZE_PX + CHESS_BOARD_WITDH_OFFSET_PX + MOVE_SYMBOL_POSSIBLE_MOVE_OFFSET_PX, newRow * CHESS_FIELD_SIZE_PX + CHESS_BOARD_HEIGHT_OFFSET_PX + MOVE_SYMBOL_POSSIBLE_MOVE_OFFSET_PX));
-                        window.draw(s);
+                    auto target = board[(newRow * CHESS_SIZE) + newCol];
+                    bool threatened = withIsKingThreatened ? isKingThreatened(mRow, mCol, newRow, newCol) : false;
+                    if (target == nullptr && !threatened) {
+                        possibleMoves.push_back(std::make_pair(convTo1D(newRow, newCol), false));
                     }
-                    else if (mChessBoard.getBoardWithFigures()[(newRow * 8) + newCol]->getColor() != mColor) {
-                        sf::Sprite& s = mSpriteHandler.getAttackFieldSprite();
-                        s.setPosition(sf::Vector2f(newCol * CHESS_FIELD_SIZE_PX + CHESS_BOARD_WITDH_OFFSET_PX + MOVE_SYMBOL_ATTACK_FIELD_OFFSET_PX, newRow * CHESS_FIELD_SIZE_PX + CHESS_BOARD_HEIGHT_OFFSET_PX + MOVE_SYMBOL_ATTACK_FIELD_OFFSET_PX));
-                        window.draw(s);
+                    else if (target != nullptr && target->getColor() != mColor && !threatened) {
+                        possibleMoves.push_back(std::make_pair(convTo1D(newRow, newCol), true));
                     }
                 }
             }
+
+            return possibleMoves;
         }
 
-	private:
+        bool isKingThreatened(int orgRow, int orgCol, int row, int col) override {
+            auto board = mChessBoard.getBoardWithFigures();
+            int curKingRow = mRow;
+            int curKingCol = mCol;
+            if (board[convTo1D(orgRow, orgCol)] != nullptr && board[convTo1D(orgRow, orgCol)]->getType() == swe::FigureIndex::king) {
+                curKingRow = row;
+                curKingCol = col;
+            }
 
-	};
+            auto copyField = board[convTo1D(row, col)];
+            board[convTo1D(row, col)] = board[convTo1D(orgRow, orgCol)];
+            board[convTo1D(orgRow, orgCol)] = nullptr;
+            for (const auto& figure : board) {
+                if (figure != nullptr && figure.get() != this && figure->getColor() != mColor) {
+                    for (const auto& step : figure->getPossibleSteps(board, false)) {
+                        if (step.first == convTo1D(curKingRow, curKingCol)) {
+                            board[convTo1D(orgRow, orgCol)] = board[convTo1D(row, col)];
+                            board[convTo1D(row, col)] = copyField;
+                            mCheck = true;
+                            return true;
+                        }
+                    }
+                }
+            }
+
+            board[convTo1D(orgRow, orgCol)] = board[convTo1D(row, col)];
+            board[convTo1D(row, col)] = copyField;
+            mCheck = false;
+
+            return false;  
+        }
+
+    private:
+        bool mCheck{ false };
+    };
 }

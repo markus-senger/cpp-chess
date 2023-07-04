@@ -88,51 +88,51 @@ namespace swe {
                 switch (c) {
                 case 'p':
                     mBoardWithFigures[convTo1D(row, col)] = std::make_shared<Pawn>(*this, mChessGame.getSpriteHandler(), 
-                        mChessGame.getSpriteHandler().getBlackFigureSprite(FigureIndex::pawn), false, swe::Color::black, row, col);
+                        mChessGame.getSpriteHandler().getBlackFigureSprite(static_cast<int>(FigureIndex::pawn)), false, swe::Color::black, row, col);
                     break;
                 case 'P':
                     mBoardWithFigures[convTo1D(row, col)] = std::make_shared<Pawn>(*this, mChessGame.getSpriteHandler(), 
-                        mChessGame.getSpriteHandler().getWhiteFigureSprite(FigureIndex::pawn), false, swe::Color::white, row, col);
+                        mChessGame.getSpriteHandler().getWhiteFigureSprite(static_cast<int>(FigureIndex::pawn)), false, swe::Color::white, row, col);
                     break;
                 case 'n':
                     mBoardWithFigures[convTo1D(row, col)] = std::make_shared<Knight>(*this, mChessGame.getSpriteHandler(),
-                        mChessGame.getSpriteHandler().getBlackFigureSprite(FigureIndex::knight), false, swe::Color::black, row, col);
+                        mChessGame.getSpriteHandler().getBlackFigureSprite(static_cast<int>(FigureIndex::knight)), false, swe::Color::black, row, col);
                     break;
                 case 'N':
                     mBoardWithFigures[convTo1D(row, col)] = std::make_shared<Knight>(*this, mChessGame.getSpriteHandler(), 
-                        mChessGame.getSpriteHandler().getWhiteFigureSprite(FigureIndex::knight), false, swe::Color::white, row, col);
+                        mChessGame.getSpriteHandler().getWhiteFigureSprite(static_cast<int>(FigureIndex::knight)), false, swe::Color::white, row, col);
                     break;
                 case 'b':
                     mBoardWithFigures[convTo1D(row, col)] = std::make_shared<Bishop>(*this, mChessGame.getSpriteHandler(), 
-                        mChessGame.getSpriteHandler().getBlackFigureSprite(FigureIndex::bishop), false, swe::Color::black, row, col);
+                        mChessGame.getSpriteHandler().getBlackFigureSprite(static_cast<int>(FigureIndex::bishop)), false, swe::Color::black, row, col);
                     break;
                 case 'B':
                     mBoardWithFigures[convTo1D(row, col)] = std::make_shared<Bishop>(*this, mChessGame.getSpriteHandler(), 
-                        mChessGame.getSpriteHandler().getWhiteFigureSprite(FigureIndex::bishop), false, swe::Color::white, row, col);
+                        mChessGame.getSpriteHandler().getWhiteFigureSprite(static_cast<int>(FigureIndex::bishop)), false, swe::Color::white, row, col);
                     break;
                 case 'r':
                     mBoardWithFigures[convTo1D(row, col)] = std::make_shared<Rook>(*this, mChessGame.getSpriteHandler(), 
-                        mChessGame.getSpriteHandler().getBlackFigureSprite(FigureIndex::rook), false, swe::Color::black, row, col);
+                        mChessGame.getSpriteHandler().getBlackFigureSprite(static_cast<int>(FigureIndex::rook)), false, swe::Color::black, row, col);
                     break;
                 case 'R':
                     mBoardWithFigures[convTo1D(row, col)] = std::make_shared<Rook>(*this, mChessGame.getSpriteHandler(), 
-                        mChessGame.getSpriteHandler().getWhiteFigureSprite(FigureIndex::rook), false, swe::Color::white, row, col);
+                        mChessGame.getSpriteHandler().getWhiteFigureSprite(static_cast<int>(FigureIndex::rook)), false, swe::Color::white, row, col);
                     break;
                 case 'q':
                     mBoardWithFigures[convTo1D(row, col)] = std::make_shared<Queen>(*this, mChessGame.getSpriteHandler(), 
-                        mChessGame.getSpriteHandler().getBlackFigureSprite(FigureIndex::queen), false, swe::Color::black, row, col);
+                        mChessGame.getSpriteHandler().getBlackFigureSprite(static_cast<int>(FigureIndex::queen)), false, swe::Color::black, row, col);
                     break;
                 case 'Q':
                     mBoardWithFigures[convTo1D(row, col)] = std::make_shared<Queen>(*this, mChessGame.getSpriteHandler(), 
-                        mChessGame.getSpriteHandler().getWhiteFigureSprite(FigureIndex::queen), false, swe::Color::white, row, col);
+                        mChessGame.getSpriteHandler().getWhiteFigureSprite(static_cast<int>(FigureIndex::queen)), false, swe::Color::white, row, col);
                     break;
                 case 'k':
                     mBoardWithFigures[convTo1D(row, col)] = std::make_shared<King>(*this, mChessGame.getSpriteHandler(), 
-                        mChessGame.getSpriteHandler().getBlackFigureSprite(FigureIndex::king), true, swe::Color::black, row, col);
+                        mChessGame.getSpriteHandler().getBlackFigureSprite(static_cast<int>(FigureIndex::king)), true, swe::Color::black, row, col);
                     break;
                 case 'K':
                     mBoardWithFigures[convTo1D(row, col)] = std::make_shared<King>(*this, mChessGame.getSpriteHandler(), 
-                        mChessGame.getSpriteHandler().getWhiteFigureSprite(FigureIndex::king), true, swe::Color::white, row, col);
+                        mChessGame.getSpriteHandler().getWhiteFigureSprite(static_cast<int>(FigureIndex::king)), true, swe::Color::white, row, col);
                     break;
                 default:
                     break;
@@ -152,5 +152,13 @@ namespace swe {
 
     swe::Graveyard& ChessBoard::getGraveyard() {
         return mGraveyard;
+    }
+
+    std::shared_ptr<swe::ChessFigure> ChessBoard::getKing(swe::Color color) {
+        for (auto figure : mBoardWithFigures) {
+            if (figure != nullptr && figure->getColor() == color && figure->getType() == swe::FigureIndex::king)
+                return figure;
+        }
+        return nullptr;
     }
 }
