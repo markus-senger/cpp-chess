@@ -57,10 +57,10 @@ namespace swe {
             auto copyField = board[convTo1D(row, col)];
             board[convTo1D(row, col)] = board[convTo1D(orgRow, orgCol)];
             board[convTo1D(orgRow, orgCol)] = nullptr;
-            for (const auto& figure : board) {
+            for (auto const& figure : board) {
                 if (figure != nullptr && figure.get() != this && figure->getColor() != mColor) {
-                    for (const auto& step : figure->getPossibleSteps(board, false)) {
-                        if (step.first == convTo1D(curKingRow, curKingCol)) {
+                    for (auto const& step : figure->getAttackSteps(board)) {
+                        if (step == convTo1D(curKingRow, curKingCol)) {
                             board[convTo1D(orgRow, orgCol)] = board[convTo1D(row, col)];
                             board[convTo1D(row, col)] = copyField;
                             return true;

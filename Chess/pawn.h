@@ -74,5 +74,21 @@ namespace swe {
 
             return possibleMoves;
         }
+
+        std::vector<int> getAttackSteps(std::array<std::shared_ptr<swe::ChessFigure>, CHESS_NUM_OF_FIELDS> const& board) override {
+            std::vector<int> attackSteps;
+
+            int direction = (mColor == Color::white) ? -1 : 1;
+
+            int newRow = mRow + direction;
+            int newCol = mCol - 1;
+            attackSteps.push_back(convTo1D(newRow, newCol));
+
+            newRow = mRow + direction;
+            newCol = mCol + 1;
+            attackSteps.push_back(convTo1D(newRow, newCol));
+
+            return attackSteps;
+        }
     };
 }

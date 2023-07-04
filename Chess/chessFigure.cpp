@@ -24,6 +24,16 @@ namespace swe {
 		}
 	}
 
+	std::vector<int> ChessFigure::getAttackSteps(std::array<std::shared_ptr<swe::ChessFigure>, CHESS_NUM_OF_FIELDS> const& board) {
+		std::vector<int> attackSteps;
+
+		for (const auto& entry : getPossibleSteps(board, false)) {
+			attackSteps.push_back(entry.first);
+		}
+
+		return attackSteps;
+	}
+
 	bool ChessFigure::isKingThreatened(int orgRow, int orgCol, int row, int col) {
 		throw std::logic_error("function not implemented");
 	}
