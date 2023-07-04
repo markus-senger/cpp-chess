@@ -53,9 +53,9 @@ namespace swe {
                     mSelectedFigure = nullptr;
                 }
                 else if (mSelectedFigure != nullptr) {
-                    mSelectedFigure->move(calcRowFromIdx(i), calcColFromIdx(i));
+                    bool moveOk = mSelectedFigure->move(calcRowFromIdx(i), calcColFromIdx(i));
                     mSelectedFigure = nullptr;
-                    return true;
+                    return moveOk;
                 }
                 else if (figure != nullptr && figure->getColor() == currentColor) {
                     figure->setSelected(true);

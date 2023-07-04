@@ -22,7 +22,7 @@ namespace swe {
 
 		virtual std::vector<int> getAttackSteps(std::array<std::shared_ptr<swe::ChessFigure>, CHESS_NUM_OF_FIELDS> const& board);
 
-		void move(int row, int col);
+		bool move(int row, int col);
 
 		virtual void draw(sf::RenderWindow& window, sf::Vector2f pos);
 
@@ -56,6 +56,7 @@ namespace swe {
 		bool mSelected;
 		int mRow;
 		int mCol;
+		std::vector<std::pair<int, bool>> mCurPossibleSteps;
 
 		void checkEnd(swe::Color color);
 		

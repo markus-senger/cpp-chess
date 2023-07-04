@@ -10,7 +10,8 @@ namespace swe {
 	}
 
 	void ChessFigure::showPossibleSteps(sf::RenderWindow& window) {
-		for (auto entry : getPossibleSteps(mChessBoard.getBoardWithFigures())) {
+		mCurPossibleSteps = getPossibleSteps(mChessBoard.getBoardWithFigures());
+		for (auto entry : mCurPossibleSteps) {
 			if (entry.second) {
 				sf::Sprite& s = mSpriteHandler.getAttackFieldSprite();
 				s.setPosition(sf::Vector2f(calcColFromIdx(entry.first) * CHESS_FIELD_SIZE_PX + CHESS_BOARD_WITDH_OFFSET_PX + MOVE_SYMBOL_ATTACK_FIELD_OFFSET_PX, calcRowFromIdx(entry.first) * CHESS_FIELD_SIZE_PX + CHESS_BOARD_HEIGHT_OFFSET_PX + MOVE_SYMBOL_ATTACK_FIELD_OFFSET_PX));
@@ -38,21 +39,31 @@ namespace swe {
 		throw std::logic_error("function not implemented");
 	}
 
-	void ChessFigure::move(int row, int col) {
-		if (mChessBoard.getBoardWithFigures()[(row * CHESS_SIZE) + col] != nullptr) {
-			mChessBoard.getGraveyard().add(mChessBoard.getBoardWithFigures()[(row * CHESS_SIZE) + col], mChessBoard.getBoardWithFigures()[(row * CHESS_SIZE) + col]->getColor());
+	bool ChessFigure::move(int row, int col) {
+		int move = convTo1D(row, col);
+		auto it = std::find_if(mCurPossibleSteps.begin(), mCurPossibleSteps.end(), [move](const std::pair<int, bool>& entry) {
+			return entry.first == move;
+		});
+		if (it != mCurPossibleSteps.end()) {
+			if (mChessBoard.getBoardWithFigures()[(row * CHESS_SIZE) + col] != nullptr) {
+				mChessBoard.getGraveyard().add(mChessBoard.getBoardWithFigures()[(row * CHESS_SIZE) + col], mChessBoard.getBoardWithFigures()[(row * CHESS_SIZE) + col]->getColor());
 
-			if(mChessBoard.getBoardWithFigures()[(row * CHESS_SIZE) + col]->mEssential)
-				mChessBoard.setEnd(true, mChessBoard.getBoardWithFigures()[(mRow * CHESS_SIZE) + mCol]->mColor);
+				if (mChessBoard.getBoardWithFigures()[(row * CHESS_SIZE) + col]->mEssential)
+					mChessBoard.setEnd(true, mChessBoard.getBoardWithFigures()[(mRow * CHESS_SIZE) + mCol]->mColor);
+			}
+			mChessBoard.getBoardWithFigures()[(row * CHESS_SIZE) + col] = mChessBoard.getBoardWithFigures()[(mRow * CHESS_SIZE) + mCol];
+			mChessBoard.getBoardWithFigures()[(mRow * CHESS_SIZE) + mCol] = nullptr;
+			mRow = row;
+			mCol = col;
+			mSelected = false;
+
+			checkEnd(swe::Color::black);
+			checkEnd(swe::Color::white);
+
+			return true;
 		}
-		mChessBoard.getBoardWithFigures()[(row * CHESS_SIZE) + col] = mChessBoard.getBoardWithFigures()[(mRow * CHESS_SIZE) + mCol];
-		mChessBoard.getBoardWithFigures()[(mRow * CHESS_SIZE) + mCol] = nullptr;
-		mRow = row;
-		mCol = col;
 		mSelected = false;
-
-		checkEnd(swe::Color::black);
-		checkEnd(swe::Color::white);
+		return false;
 	}
 
 	void ChessFigure::checkEnd(swe::Color color) {
