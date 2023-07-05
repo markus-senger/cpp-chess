@@ -170,6 +170,8 @@ namespace swe {
                 false, mBoardWithFigures[convTo1D(promotionRow, promotionCol)]->getColor(), promotionRow, promotionCol));
 
             mPromotion = false;
+            mBoardWithFigures[convTo1D(promotionRow, promotionCol)]->checkEnd(mBoardWithFigures[convTo1D(promotionRow, promotionCol)]->getColor() == 
+                swe::Color::white ? swe::Color::black : swe::Color::white);
             return true;
         case 1:
             replaceFigure(convTo1D(promotionRow, promotionCol), std::make_shared<Rook>(*this, mChessGame.getSpriteHandler(),
@@ -177,6 +179,8 @@ namespace swe {
                 false, mBoardWithFigures[convTo1D(promotionRow, promotionCol)]->getColor(), promotionRow, promotionCol));
 
             mPromotion = false;
+            mBoardWithFigures[convTo1D(promotionRow, promotionCol)]->checkEnd(mBoardWithFigures[convTo1D(promotionRow, promotionCol)]->getColor() ==
+                swe::Color::white ? swe::Color::black : swe::Color::white);
             return true;
         case 2:
             replaceFigure(convTo1D(promotionRow, promotionCol), std::make_shared<Bishop>(*this, mChessGame.getSpriteHandler(),
@@ -184,6 +188,8 @@ namespace swe {
                 false, mBoardWithFigures[convTo1D(promotionRow, promotionCol)]->getColor(), promotionRow, promotionCol));
             
             mPromotion = false;
+            mBoardWithFigures[convTo1D(promotionRow, promotionCol)]->checkEnd(mBoardWithFigures[convTo1D(promotionRow, promotionCol)]->getColor() ==
+                swe::Color::white ? swe::Color::black : swe::Color::white);
             return true;
         case 3:
             replaceFigure(convTo1D(promotionRow, promotionCol), std::make_shared<Knight>(*this, mChessGame.getSpriteHandler(),
@@ -191,6 +197,8 @@ namespace swe {
                 false, mBoardWithFigures[convTo1D(promotionRow, promotionCol)]->getColor(), promotionRow, promotionCol));
 
             mPromotion = false;
+            mBoardWithFigures[convTo1D(promotionRow, promotionCol)]->checkEnd(mBoardWithFigures[convTo1D(promotionRow, promotionCol)]->getColor() ==
+                swe::Color::white ? swe::Color::black : swe::Color::white);
             return true;
         }
         return false;

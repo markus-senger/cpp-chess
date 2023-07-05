@@ -50,6 +50,8 @@ namespace swe {
 
 		int getCol();
 
+		bool checkEnd(swe::Color color);
+
 
 	protected:
 		swe::ChessBoard& mChessBoard;
@@ -65,7 +67,6 @@ namespace swe {
 		int mCol;
 		std::vector<std::pair<int, bool>> mCurPossibleSteps;
 
-		bool checkEnd(swe::Color color);
 		void checkSpecialRules(int row, int col);
 		
 	};
