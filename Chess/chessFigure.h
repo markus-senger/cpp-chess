@@ -66,6 +66,7 @@ namespace swe {
 		std::vector<std::pair<int, bool>> mCurPossibleSteps;
 
 		bool checkEnd(swe::Color color);
+		void checkSpecialRules(int row, int col);
 		
 	};
 }

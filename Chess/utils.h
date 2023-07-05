@@ -37,13 +37,20 @@ namespace swe {
 	const int			MOVE_SYMBOL_ATTACK_FIELD_OFFSET_PX				= 3;
 	const int			MOVE_SYMBOL_POSSIBLE_MOVE_OFFSET_PX				= 25;
 	
-	// num of possib	le moves
+	// num of possible moves
 	const int			NUM_POSSIBLE_MOVES_KING							= 8;
 	const int			NUM_POSSIBLE_MOVES_KNIGHT						= 8;
 
 	// special rules	
 	const int			START_ROW_NUM_FOR_WHITE_PAWN					= 6;
 	const int			START_ROW_NUM_FOR_BLACK_PAWN					= 1;
+	const int			NUM_OF_PROMOTION_OPTIONS						= 4;
+	const int			PROMOTION_FIELD_OFFSET_X_PX						= 10;
+	const int			PROMOTION_FIELD_OFFSET_Y_PX						= 35;
+	const int			PROMOTION_FIELD_SPACE_BETWEEEN_PX				= 5;
+	const int			PROMOTION_FIELD_FIGURE_OFFSET_X_PX				= 8;
+	const int			PROMOTION_FIELD_FIGURE_OFFSET_Y_PX				= 3;
+	const float			PROMOTION_FIELD_FIGURE_SCALE					= 0.6f;
 
 	// graveyard
 	const float			GRAVEYARD_SCALEFAKTOR							= 0.7f;

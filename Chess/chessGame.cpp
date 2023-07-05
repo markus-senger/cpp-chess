@@ -18,6 +18,7 @@ namespace swe {
 		mButtonBack{ swe::Button(BACK_BUTTON_POSITION_V, "Images/button_back.png", "Images/button_hover_back.png") },
 		mButtonBackToMenu{ swe::Button("Images/button_backToMenu.png", "Images/button_hover_backToMenu.png") },
 		mBoard{ *this },
+		mAiVsAi{ false },
 		mSpriteHandler{} {
 
 		loadFonts();
@@ -39,6 +40,12 @@ namespace swe {
 	void ChessGame::setEnd(bool value, swe::Color winColor) {
 		mEnd = value;
 		mWinColor = winColor;
+	}
+
+	bool ChessGame::isActivePlayerAI() {
+		if (mPlayer1->getTurn())
+			return mPlayer1->isAi();
+		return mPlayer2->isAi();
 	}
 
 	void ChessGame::createWindow() {

@@ -17,6 +17,7 @@ namespace swe {
 		swe::SpriteHandler& getSpriteHandler();
 		void setStarted(bool value);
 		void setEnd(bool value, swe::Color winColor);
+		bool isActivePlayerAI();
 
 
 	private:

@@ -5,7 +5,7 @@
 namespace swe {
 	class PlayerHuman : public Player {
 	public:
-		PlayerHuman(swe::Color color, bool turn, swe::ChessBoard& board) : Player(color, turn, board) {}
+		PlayerHuman(swe::Color color, bool turn, swe::ChessBoard& board) : Player(color, false, turn, board) {}
 
 		bool turn() override {
 			if (mTurn && mBoard.handleEvent(mColor)) {

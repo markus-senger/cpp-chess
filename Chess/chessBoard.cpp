@@ -14,7 +14,7 @@
 
 namespace swe {
 	ChessBoard::ChessBoard(swe::ChessGame& chessGame)
-			:	mChessGame{ chessGame } {
+        : mChessGame{ chessGame }, mPromotion{ false }{
 
 		mChessGame.getSpriteHandler().getBoardSprite().setPosition(sf::Vector2f(0, CHESS_BOARD_HEADER_SIZE_PX));
 	}
@@ -40,37 +40,164 @@ namespace swe {
         if(mSelectedFigure)
             mSelectedFigure->draw(window, sf::Vector2f((calcColFromIdx(j)) * CHESS_FIELD_SIZE_PX + CHESS_BOARD_WITDH_OFFSET_PX, 
                 (calcRowFromIdx(j)) * CHESS_FIELD_SIZE_PX + CHESS_BOARD_HEIGHT_OFFSET_PX));
+
+        if (mPromotion) {
+            drawPromotionBoard(window);
+        }
 	}
+
+    void ChessBoard::drawPromotionBoard(sf::RenderWindow& window) {
+        sf::Sprite& promotionBoard = mChessGame.getSpriteHandler().getPromotionBoardSprite();
+        promotionBoard.setPosition(WINDOW_DEFAULT_WIDTH_PX / 2 - promotionBoard.getLocalBounds().width / 2, 
+            WINDOW_DEFAULT_HEIGHT_PX / 2 - promotionBoard.getLocalBounds().height / 2);
+        window.draw(promotionBoard);
+
+        sf::Sprite& promotionBoardField = mChessGame.getSpriteHandler().getPromotionBoardFieldSprite();
+        sf::Sprite& promotionBoardSelectedField = mChessGame.getSpriteHandler().getPromotionBoardSelectedFieldSprite();
+        for (int i = 0; i < NUM_OF_PROMOTION_OPTIONS; i++) {
+            float posX = WINDOW_DEFAULT_WIDTH_PX / 2 - promotionBoard.getLocalBounds().width / 2 +
+                i * (promotionBoardField.getLocalBounds().width + PROMOTION_FIELD_SPACE_BETWEEEN_PX) + PROMOTION_FIELD_OFFSET_X_PX;
+            float posY = WINDOW_DEFAULT_HEIGHT_PX / 2 - promotionBoard.getLocalBounds().height / 2 + PROMOTION_FIELD_OFFSET_Y_PX;
+
+            if (mouseOverPromotionBoardField() == i) {
+                promotionBoardSelectedField.setPosition(posX, posY);
+                window.draw(promotionBoardSelectedField);
+            }
+            else {
+                promotionBoardField.setPosition(posX, posY);
+                window.draw(promotionBoardField);
+            }
+
+            switch (i) {
+                case 0:
+                {
+                    sf::Sprite queenSprite = mChessGame.getSpriteHandler().getPromotionFigureSprite(mBoardWithFigures[convTo1D(promotionRow, promotionCol)]->getColor(),
+                        FigureIndex::queen);
+                    queenSprite.setPosition(posX + PROMOTION_FIELD_FIGURE_OFFSET_X_PX, posY + PROMOTION_FIELD_FIGURE_OFFSET_Y_PX);
+                    queenSprite.scale(sf::Vector2(PROMOTION_FIELD_FIGURE_SCALE, PROMOTION_FIELD_FIGURE_SCALE));
+                    window.draw(queenSprite);
+                    break;
+                }
+                case 1:
+                {
+                    sf::Sprite rookSprite = mChessGame.getSpriteHandler().getPromotionFigureSprite(mBoardWithFigures[convTo1D(promotionRow, promotionCol)]->getColor(),
+                        FigureIndex::rook);
+                    rookSprite.setPosition(posX + PROMOTION_FIELD_FIGURE_OFFSET_X_PX, posY + PROMOTION_FIELD_FIGURE_OFFSET_Y_PX);
+                    rookSprite.scale(sf::Vector2(PROMOTION_FIELD_FIGURE_SCALE, PROMOTION_FIELD_FIGURE_SCALE));
+                    window.draw(rookSprite);
+                    break;
+                }
+                case 2:
+                {
+                    sf::Sprite bishopSprite = mChessGame.getSpriteHandler().getPromotionFigureSprite(mBoardWithFigures[convTo1D(promotionRow, promotionCol)]->getColor(),
+                        FigureIndex::bishop);
+                    bishopSprite.setPosition(posX + PROMOTION_FIELD_FIGURE_OFFSET_X_PX, posY + PROMOTION_FIELD_FIGURE_OFFSET_Y_PX);
+                    bishopSprite.scale(sf::Vector2(PROMOTION_FIELD_FIGURE_SCALE, PROMOTION_FIELD_FIGURE_SCALE));
+                    window.draw(bishopSprite);
+                    break;
+                }
+                case 3:
+                {
+                    sf::Sprite knightSprite = mChessGame.getSpriteHandler().getPromotionFigureSprite(mBoardWithFigures[convTo1D(promotionRow, promotionCol)]->getColor(),
+                        FigureIndex::knight);
+                    knightSprite.setPosition(posX + PROMOTION_FIELD_FIGURE_OFFSET_X_PX, posY + PROMOTION_FIELD_FIGURE_OFFSET_Y_PX);
+                    knightSprite.scale(sf::Vector2(PROMOTION_FIELD_FIGURE_SCALE, PROMOTION_FIELD_FIGURE_SCALE));
+                    window.draw(knightSprite);
+                    break;
+                }
+            }
+        }
+    }
+
+    int ChessBoard::mouseOverPromotionBoardField() {
+        sf::Vector2i mousePos = sf::Mouse::getPosition(mChessGame.getWindow());
+
+        sf::Sprite& promotionBoard = mChessGame.getSpriteHandler().getPromotionBoardSprite();
+        sf::Sprite& promotionBoardField = mChessGame.getSpriteHandler().getPromotionBoardFieldSprite();
+
+        for(int i = 0; i < NUM_OF_PROMOTION_OPTIONS; i++) {
+            float posX = WINDOW_DEFAULT_WIDTH_PX / 2 - promotionBoard.getLocalBounds().width / 2 +
+                i * (promotionBoardField.getLocalBounds().width + PROMOTION_FIELD_SPACE_BETWEEEN_PX) + PROMOTION_FIELD_OFFSET_X_PX;
+            float posY = WINDOW_DEFAULT_HEIGHT_PX / 2 - promotionBoard.getLocalBounds().height / 2 + PROMOTION_FIELD_OFFSET_Y_PX;
+            if (mousePos.x >= posX && mousePos.x <= posX + promotionBoardField.getLocalBounds().width &&
+                mousePos.y >= posY && mousePos.y <= posY + promotionBoardField.getLocalBounds().height) {
+                return i;
+            }
+        }
+        return -1;
+    }
 
 	bool ChessBoard::handleEvent(swe::Color currentColor) {
         sf::Vector2i mousePos = sf::Mouse::getPosition(mChessGame.getWindow());
   
-        int i = 0;
-        for (auto& figure : mBoardWithFigures) {
-            if (mouseOverFieldAccordingToIdx(mousePos, i)) {
-                if (figure != nullptr && figure == mSelectedFigure) {
+        if (mPromotion) {
+            return handlePromotion();
+        }
+        else {
+            int i = 0;
+            for (auto& figure : mBoardWithFigures) {
+                if (mouseOverFieldAccordingToIdx(mousePos, i)) {
+                    if (figure != nullptr && figure == mSelectedFigure) {
+                        figure->setSelected(false);
+                        mSelectedFigure = nullptr;
+                    }
+                    else if (mSelectedFigure != nullptr) {
+                        bool moveOk = mSelectedFigure->move(calcRowFromIdx(i), calcColFromIdx(i));
+                        mSelectedFigure = nullptr;
+                        return mPromotion ? false : moveOk;
+                    }
+                    else if (figure != nullptr && figure->getColor() == currentColor) {
+                        figure->setSelected(true);
+                        mSelectedFigure = figure;
+                    }
+                }
+                else if (figure != nullptr)
                     figure->setSelected(false);
-                    mSelectedFigure = nullptr;
-                }
-                else if (mSelectedFigure != nullptr) {
-                    bool moveOk = mSelectedFigure->move(calcRowFromIdx(i), calcColFromIdx(i));
-                    mSelectedFigure = nullptr;
-                    return moveOk;
-                }
-                else if (figure != nullptr && figure->getColor() == currentColor) {
-                    figure->setSelected(true);
-                    mSelectedFigure = figure;
-                }
-            }             
-            else if (figure != nullptr)
-                figure->setSelected(false);
 
-            i++;
+                i++;
+            }
         }
         return false;  
 	}
 
+    bool ChessBoard::handlePromotion(int idx) {
+        int choice = idx != -1 ? idx : mouseOverPromotionBoardField();
+
+        switch (choice) {
+        case 0:
+            replaceFigure(convTo1D(promotionRow, promotionCol), std::make_shared<Queen>(*this, mChessGame.getSpriteHandler(),
+                mChessGame.getSpriteHandler().getPromotionFigureSprite(mBoardWithFigures[convTo1D(promotionRow, promotionCol)]->getColor(), FigureIndex::queen), 
+                false, mBoardWithFigures[convTo1D(promotionRow, promotionCol)]->getColor(), promotionRow, promotionCol));
+
+            mPromotion = false;
+            return true;
+        case 1:
+            replaceFigure(convTo1D(promotionRow, promotionCol), std::make_shared<Rook>(*this, mChessGame.getSpriteHandler(),
+                mChessGame.getSpriteHandler().getPromotionFigureSprite(mBoardWithFigures[convTo1D(promotionRow, promotionCol)]->getColor(), FigureIndex::rook), 
+                false, mBoardWithFigures[convTo1D(promotionRow, promotionCol)]->getColor(), promotionRow, promotionCol));
+
+            mPromotion = false;
+            return true;
+        case 2:
+            replaceFigure(convTo1D(promotionRow, promotionCol), std::make_shared<Bishop>(*this, mChessGame.getSpriteHandler(),
+                mChessGame.getSpriteHandler().getPromotionFigureSprite(mBoardWithFigures[convTo1D(promotionRow, promotionCol)]->getColor(), FigureIndex::bishop), 
+                false, mBoardWithFigures[convTo1D(promotionRow, promotionCol)]->getColor(), promotionRow, promotionCol));
+            
+            mPromotion = false;
+            return true;
+        case 3:
+            replaceFigure(convTo1D(promotionRow, promotionCol), std::make_shared<Knight>(*this, mChessGame.getSpriteHandler(),
+                mChessGame.getSpriteHandler().getPromotionFigureSprite(mBoardWithFigures[convTo1D(promotionRow, promotionCol)]->getColor(), FigureIndex::knight), 
+                false, mBoardWithFigures[convTo1D(promotionRow, promotionCol)]->getColor(), promotionRow, promotionCol));
+
+            mPromotion = false;
+            return true;
+        }
+        return false;
+    }
+
 	void ChessBoard::init(std::string const& fen) {
+        mPromotion = false;
         mBoardWithFigures.fill(nullptr);
         mGraveyard.clear();
         int row = 0; 
@@ -161,5 +288,28 @@ namespace swe {
                     return figure;
         }
         return nullptr;
+    }
+
+    void ChessBoard::setPromotion(int row, int col) {
+        mPromotion = true;
+        promotionRow = row;
+        promotionCol = col;
+    }
+
+    void ChessBoard::replaceFigure(int idx, std::shared_ptr<ChessFigure> newFigure) {
+        for (int i = 0; i < CHESS_NUM_OF_FIELDS; i++) {
+            if (i == idx) {
+                mBoardWithFigures[i] = newFigure;
+                break;
+            }
+        }
+    }
+
+    bool ChessBoard::getPromotion() {
+        return mPromotion;
+    }
+    
+    bool ChessBoard::isActivePlayerAI() {
+        return mChessGame.isActivePlayerAI();
     }
 }

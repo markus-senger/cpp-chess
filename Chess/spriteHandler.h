@@ -1,6 +1,8 @@
 #pragma once
 #include <SFML/Graphics.hpp>
 #include "utils.h"
+#include "color.h"
+#include "figureIndex.h"
 
 namespace swe {
 	class SpriteHandler {
@@ -49,6 +51,27 @@ namespace swe {
 			return mSCheckField;
 		}
 
+		sf::Sprite& getPromotionBoardSprite() {
+			return mSPromotionBoard;
+		}
+
+		sf::Sprite& getPromotionBoardFieldSprite() {
+			return mSPromotionBoardField;
+		}
+
+		sf::Sprite& getPromotionBoardSelectedFieldSprite() {
+			return mSPromotionBoardSelectedField;
+		}
+
+		sf::Sprite& getPromotionFigureSprite(swe::Color color, swe::FigureIndex figure) {
+			if (color == swe::Color::black) {
+				return mSFiguresBlack[static_cast<int>(figure)];
+			}
+			else {
+				return mSFiguresWhite[static_cast<int>(figure)];
+			}
+		}
+
 	private:
 		sf::Texture mTFigures;
 		sf::Sprite mSFiguresWhite[CHESS_NUM_DIFFERENT_FIGURES];
@@ -77,6 +100,16 @@ namespace swe {
 
 		sf::Texture mTCheckField;
 		sf::Sprite mSCheckField;
+
+		sf::Texture mTPromotionBoard;
+		sf::Sprite mSPromotionBoard;
+
+		sf::Texture mTPromotionBoardField;
+		sf::Sprite mSPromotionBoardField;
+
+		sf::Texture mTPromotionBoardSelectedField;
+		sf::Sprite mSPromotionBoardSelectedField;
+
 
 		void createSprites() {
 			mTFigures.loadFromFile("Images/figures.png");
@@ -107,6 +140,15 @@ namespace swe {
 
 			mTCheckField.loadFromFile("Images/checkField.png");
 			mSCheckField.setTexture(mTCheckField);
+
+			mTPromotionBoard.loadFromFile("Images/promotionBoard.png");
+			mSPromotionBoard.setTexture(mTPromotionBoard);
+
+			mTPromotionBoardField.loadFromFile("Images/promotionBoardField.png");
+			mSPromotionBoardField.setTexture(mTPromotionBoardField);
+
+			mTPromotionBoardSelectedField.loadFromFile("Images/promotionBoardSelectedField.png");
+			mSPromotionBoardSelectedField.setTexture(mTPromotionBoardSelectedField);
 		}
 
 		void cutFiguresFromImage(sf::Sprite(&figures)[6], sf::Texture const& tFigures, int const yOffset) {

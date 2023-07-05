@@ -19,11 +19,22 @@ namespace swe {
 		void setEnd(bool value, swe::Color winColor);
 		swe::Graveyard& getGraveyard();
 		std::shared_ptr<swe::ChessFigure> getFigure(swe::Color color, swe::FigureIndex type, int row = -1, int col = -1);
+		void setPromotion(int row, int col);
+		bool getPromotion();
+		bool isActivePlayerAI();
+		bool handlePromotion(int idx = -1);
 
 	private:
 		swe::ChessGame& mChessGame;
 		swe::Graveyard mGraveyard;
 		std::array<std::shared_ptr<swe::ChessFigure>, CHESS_NUM_OF_FIELDS> mBoardWithFigures{};
 		std::shared_ptr<ChessFigure> mSelectedFigure{};
+		bool mPromotion;
+		int promotionRow;
+		int promotionCol;
+
+		void drawPromotionBoard(sf::RenderWindow& window);
+		void replaceFigure(int idx, std::shared_ptr<ChessFigure> newFigure);
+		int mouseOverPromotionBoardField();
 	};
 }

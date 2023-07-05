@@ -1,5 +1,9 @@
 #include "chessFigure.h"
 #include "chessBoard.h"
+#include "knight.h"
+#include "rook.h"
+#include "bishop.h"
+#include "queen.h"
 
 #include <cmath>
 
@@ -58,17 +62,7 @@ namespace swe {
 					mChessBoard.setEnd(true, mChessBoard.getBoardWithFigures()[convTo1D(mRow, mCol)]->mColor);
 			}
 
-			// rochade
-			if (getType() == swe::FigureIndex::king && std::abs(mCol - col) == 2) {
-				if (col == 2) { // long rochade
-					auto rook = mChessBoard.getFigure(mColor, swe::FigureIndex::rook, -1, 0);
-					rook->move(rook->getRow(), 3, true);
-				}
-				else if (col == 6) { // short rochade
-					auto rook = mChessBoard.getFigure(mColor, swe::FigureIndex::rook, -1, 7);
-					rook->move(rook->getRow(), 5, true);
-				}
-			}
+			checkSpecialRules(row, col);
 
 			mChessBoard.getBoardWithFigures()[convTo1D(row, col)] = mChessBoard.getBoardWithFigures()[convTo1D(mRow, mCol)];
 			mChessBoard.getBoardWithFigures()[convTo1D(mRow, mCol)] = nullptr;
@@ -76,17 +70,44 @@ namespace swe {
 			mCol = col;
 			mSelected = false;
 			mFirstMove = false;
-
+	
 			bool blackCheck = checkEnd(swe::Color::black);
 			bool whiteCheck = checkEnd(swe::Color::white);
 			if (blackCheck && whiteCheck) {
 				mChessBoard.setEnd(true, swe::Color::none);
 			}
 
+			if (mChessBoard.getPromotion() && mChessBoard.isActivePlayerAI()) {
+				std::srand(std::time(nullptr));
+				mChessBoard.handlePromotion(std::rand() % 4);
+			}
+
+
 			return true;
 		}
 		mSelected = false;
 		return false;
+	}
+
+	void ChessFigure::checkSpecialRules(int row, int col) {
+		// rochade
+		if (getType() == swe::FigureIndex::king && std::abs(mCol - col) == 2) {
+			if (col == 2) { // long rochade
+				auto rook = mChessBoard.getFigure(mColor, swe::FigureIndex::rook, -1, 0);
+				rook->move(rook->getRow(), 3, true);
+			}
+			else if (col == 6) { // short rochade
+				auto rook = mChessBoard.getFigure(mColor, swe::FigureIndex::rook, -1, 7);
+				rook->move(rook->getRow(), 5, true);
+			}
+		}
+
+		// pawn promotion
+		if (getType() == swe::FigureIndex::pawn) {
+			if ((mColor == swe::Color::white && row == 0) || (mColor == swe::Color::black && row == 7)) {
+				mChessBoard.setPromotion(row, col);
+			}
+		}
 	}
 
 	bool ChessFigure::checkEnd(swe::Color color) {

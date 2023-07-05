@@ -7,7 +7,7 @@
 namespace swe {
 	class PlayerAI : public Player {
 	public:
-		PlayerAI(swe::Color color, bool turn, swe::ChessBoard& board) : Player(color, turn, board) {}
+		PlayerAI(swe::Color color, bool turn, swe::ChessBoard& board) : Player(color, true, turn, board) {}
 
 		bool turn() override {
 			if (mTurn) {
