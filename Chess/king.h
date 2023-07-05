@@ -42,6 +42,29 @@ namespace swe {
                 }
             }
 
+            // rochade
+            if (mFirstMove && !mCheck && withIsKingThreatened) {
+                // short
+                if (board[convTo1D(mRow, mCol + 1)] == nullptr && board[convTo1D(mRow, mCol + 2)] == nullptr &&
+                    !isKingThreatened(mRow, mCol, mRow, mCol + 1) && !isKingThreatened(mRow, mCol, mRow, mCol + 2)) {
+
+                    auto rook = board[convTo1D(mRow, mCol + 3)];
+                    if (rook != nullptr && rook->getFirstMove()) {
+                        possibleMoves.push_back(std::make_pair(convTo1D(mRow, mCol + 2), false));
+                    }
+                }
+
+                // long
+                if (board[convTo1D(mRow, mCol - 1)] == nullptr && board[convTo1D(mRow, mCol - 2)] == nullptr && board[convTo1D(mRow, mCol - 3)] == nullptr &&
+                    !isKingThreatened(mRow, mCol, mRow, mCol - 1) && !isKingThreatened(mRow, mCol, mRow, mCol - 2)) {
+
+                    auto rook = board[convTo1D(mRow, mCol - 4)];
+                    if (rook != nullptr && rook->getFirstMove()) {
+                        possibleMoves.push_back(std::make_pair(convTo1D(mRow, mCol - 2), false));
+                    }
+                }
+            }
+
             return possibleMoves;
         }
 

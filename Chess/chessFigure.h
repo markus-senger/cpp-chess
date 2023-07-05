@@ -24,7 +24,7 @@ namespace swe {
 
 		virtual std::vector<int> getAttackSteps(std::array<std::shared_ptr<swe::ChessFigure>, CHESS_NUM_OF_FIELDS> const& board);
 
-		bool move(int row, int col);
+		bool move(int row, int col, bool force = false);
 
 		virtual void draw(sf::RenderWindow& window, sf::Vector2f pos);
 
@@ -39,6 +39,10 @@ namespace swe {
 		swe::FigureIndex getType();
 
 		swe::Color getColor();
+
+		bool getFirstMove();
+
+		void setFirstMove(bool value);
 
 		float getHeight();
 
@@ -55,6 +59,7 @@ namespace swe {
 		bool mEssential;
 		swe::FigureIndex mType;
 		swe::Color mColor;
+		bool mFirstMove;
 		bool mSelected;
 		int mRow;
 		int mCol;
