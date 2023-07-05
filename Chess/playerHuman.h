@@ -14,7 +14,5 @@ namespace swe {
 			}
 			return false;
 		}
-
-	private:
 	};
 }

@@ -49,20 +49,24 @@ namespace swe {
 			return entry.first == move;
 		});
 		if (it != mCurPossibleSteps.end()) {
-			if (mChessBoard.getBoardWithFigures()[(row * CHESS_SIZE) + col] != nullptr) {
-				mChessBoard.getGraveyard().add(mChessBoard.getBoardWithFigures()[(row * CHESS_SIZE) + col], mChessBoard.getBoardWithFigures()[(row * CHESS_SIZE) + col]->getColor());
+			if (mChessBoard.getBoardWithFigures()[convTo1D(row, col)] != nullptr) {
+				mChessBoard.getGraveyard().add(mChessBoard.getBoardWithFigures()[convTo1D(row, col)], mChessBoard.getBoardWithFigures()[convTo1D(row, col)]->getColor());
 
-				if (mChessBoard.getBoardWithFigures()[(row * CHESS_SIZE) + col]->mEssential)
-					mChessBoard.setEnd(true, mChessBoard.getBoardWithFigures()[(mRow * CHESS_SIZE) + mCol]->mColor);
+				if (mChessBoard.getBoardWithFigures()[convTo1D(row, col)]->mEssential)
+					mChessBoard.setEnd(true, mChessBoard.getBoardWithFigures()[convTo1D(mRow, mCol)]->mColor);
 			}
-			mChessBoard.getBoardWithFigures()[(row * CHESS_SIZE) + col] = mChessBoard.getBoardWithFigures()[(mRow * CHESS_SIZE) + mCol];
-			mChessBoard.getBoardWithFigures()[(mRow * CHESS_SIZE) + mCol] = nullptr;
+
+			mChessBoard.getBoardWithFigures()[convTo1D(row, col)] = mChessBoard.getBoardWithFigures()[convTo1D(mRow, mCol)];
+			mChessBoard.getBoardWithFigures()[convTo1D(mRow, mCol)] = nullptr;
 			mRow = row;
 			mCol = col;
 			mSelected = false;
 
-			checkEnd(swe::Color::black);
-			checkEnd(swe::Color::white);
+			bool blackCheck = checkEnd(swe::Color::black);
+			bool whiteCheck = checkEnd(swe::Color::white);
+			if (blackCheck && whiteCheck) {
+				mChessBoard.setEnd(true, swe::Color::none);
+			}
 
 			return true;
 		}
@@ -70,8 +74,10 @@ namespace swe {
 		return false;
 	}
 
-	void ChessFigure::checkEnd(swe::Color color) {
+	bool ChessFigure::checkEnd(swe::Color color) {
 		auto king = mChessBoard.getKing(color);
+		bool tooLessMaterial = false;
+
 		if (king->isKingThreatened(king->getRow(), king->getCol(), king->getRow(), king->getCol())) {
 			king->setCheck(true);
 
@@ -87,13 +93,50 @@ namespace swe {
 			king->setCheck(false);
 
 			int cntPossibleMoves = 0;
+
+			int numKings = 0;
+			int numBishops = 0;
+			int numKnights = 0;
+			int numPawns = 0;
+			int numOthers = 0;
+
 			for (auto& figure : mChessBoard.getBoardWithFigures()) {
-				if (figure != nullptr && figure->getColor() == color)
+				if (figure != nullptr && figure->getColor() == color) {
 					cntPossibleMoves += figure->getPossibleSteps(mChessBoard.getBoardWithFigures()).size();
+				
+					if (figure->getType() == swe::FigureIndex::king) {
+						numKings++;
+					}
+					else if (figure->getType() == swe::FigureIndex::bishop) {
+						numBishops++;
+					}
+					else if (figure->getType() == swe::FigureIndex::knight) {
+						numKnights++;
+					}
+					else if (figure->getType() == swe::FigureIndex::pawn) {
+						numPawns++;
+					}
+					else {
+						numOthers++;
+					}
+				}
 			}
+
+			if (numKings == 1 && numBishops == 1 && numKnights == 0 && numPawns == 0 && numOthers == 0) {
+				tooLessMaterial = true;
+			}
+			else if (numKings == 1 && numBishops == 0 && numKnights == 1 && numPawns == 0 && numOthers == 0) {
+				tooLessMaterial = true;
+			}
+			else if (numKings == 1 && numBishops == 0 && numKnights == 0 && numPawns == 0 && numOthers == 0) {
+				tooLessMaterial = true;
+			}
+
 			if (cntPossibleMoves <= 0)
 				mChessBoard.setEnd(true, swe::Color::none);
 		}
+
+		return tooLessMaterial;
 	}
 
 	void ChessFigure::draw(sf::RenderWindow& window, sf::Vector2f pos) {

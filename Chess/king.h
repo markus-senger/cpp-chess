@@ -30,7 +30,7 @@ namespace swe {
                 int newRow = mRow + dy[i];
                 int newCol = mCol + dx[i];
 
-                if (newRow >= 0 && newRow < CHESS_SIZE && newCol >= 0 && newCol < 8) {
+                if (newRow >= 0 && newRow < CHESS_SIZE && newCol >= 0 && newCol < CHESS_SIZE) {
                     auto target = board[(newRow * CHESS_SIZE) + newCol];
                     bool threatened = withIsKingThreatened ? isKingThreatened(mRow, mCol, newRow, newCol) : false;
                     if (target == nullptr && !threatened) {

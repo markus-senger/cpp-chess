@@ -60,7 +60,7 @@ namespace swe {
 		int mCol;
 		std::vector<std::pair<int, bool>> mCurPossibleSteps;
 
-		void checkEnd(swe::Color color);
+		bool checkEnd(swe::Color color);
 		
 	};
 }

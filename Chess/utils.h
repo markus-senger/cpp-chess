@@ -5,7 +5,7 @@
 namespace swe {
 	// generally
 	const int			WINDOW_DEFAULT_WIDTH_PX							= 840;
-	const int			WINDOW_DEFAULT_HEIGHT_PX						= 820;
+	const int			WINDOW_DEFAULT_HEIGHT_PX						= 840;
 	const int			CHESS_SIZE										= 8;
 	const int			CHESS_NUM_OF_FIELDS								= CHESS_SIZE * CHESS_SIZE;
 	const float			CHESS_FIELD_SIZE_PX								= 85.25f;
@@ -25,7 +25,9 @@ namespace swe {
 	const int			TITLE_MENU_SECOND_ROW_OFFSET_FROM_CENTER_PX		= 190;
 	const int			BUTTON_MENU_FIRST_ROW_OFFSET_FROM_CENTER_PX		= -80;
 	const int			BUTTON_MENU_SECOND_ROW_OFFSET_FROM_CENTER_PX	= 20;
+	const int			BUTTON_MENU_THIRD_ROW_OFFSET_FROM_CENTER_PX		= 120;
 	const sf::Vector2f	BACK_BUTTON_POSITION_V							= sf::Vector2f(50, 30);
+	const sf::Vector2f	INFO_MOUSE_BUTTON_PRESS_V						= sf::Vector2f(WINDOW_DEFAULT_WIDTH_PX / 2, WINDOW_DEFAULT_HEIGHT_PX - 15);
 	const sf::Vector2f	TURN_INFO_POSITION_V							= sf::Vector2f(310, 13);
 	const int			POPUP_WINDOW_FIRST_ROW_OFFSET_FROM_CENTER_PX	= -50;
 	const int			POPUP_WINDOW_THIRD_ROW_OFFSET_FROM_CENTER_PX	= 50;

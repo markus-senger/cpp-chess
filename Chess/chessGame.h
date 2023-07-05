@@ -35,10 +35,12 @@ namespace swe {
 
 		bool mStarted;
 		bool mEnd;
+		bool mAiVsAi;
 		swe::Color mWinColor;
 
 		swe::Button mButtonPlayFriend;
 		swe::Button mButtonPlayAI;
+		swe::Button mButtonPlayAIvsAI;
 		swe::Button mButtonBack;
 		swe::Button mButtonBackToMenu;
 

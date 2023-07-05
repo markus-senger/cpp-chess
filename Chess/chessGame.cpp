@@ -1,6 +1,9 @@
 #include "chessGame.h"
 #include "chessBoard.h"
 
+#include <chrono>
+#include <thread>
+
 namespace swe {
 	ChessGame::ChessGame()
 		: mStarted{ false }, mWinColor{ swe::Color::none }, mEnd{ false },
@@ -10,6 +13,8 @@ namespace swe {
 											"Images/button_play-with-a-friend.png", "Images/button_hover_play-with-a-friend.png" },
 		mButtonPlayAI(sf::Vector2f(mWitdh / 2, mHeight / 2 + BUTTON_MENU_SECOND_ROW_OFFSET_FROM_CENTER_PX), 
 											"Images/button_play-with-the-ai.png", "Images/button_hover_play-with-the-ai.png"),
+		mButtonPlayAIvsAI(sf::Vector2f(mWitdh / 2, mHeight / 2 + BUTTON_MENU_THIRD_ROW_OFFSET_FROM_CENTER_PX),
+											"Images/button_play-ai-vs-ai.png", "Images/button_hover_play-ai-vs-ai.png"),
 		mButtonBack{ swe::Button(BACK_BUTTON_POSITION_V, "Images/button_back.png", "Images/button_hover_back.png") },
 		mButtonBackToMenu{ swe::Button("Images/button_backToMenu.png", "Images/button_hover_backToMenu.png") },
 		mBoard{ *this },
@@ -71,16 +76,27 @@ namespace swe {
 							mPlayer1 = std::make_unique<PlayerHuman>(swe::Color::white, true, mBoard);
 							mPlayer2 = std::make_unique<PlayerAI>(swe::Color::black, false, mBoard);
 						}
+						else if (mButtonPlayAIvsAI.isMouseOver(static_cast<sf::Vector2f>(sf::Mouse::getPosition(mWindow)))) {
+							mStarted = true;
+							mAiVsAi = true;
+							mPlayer1 = std::make_unique<PlayerAI>(swe::Color::white, true, mBoard);
+							mPlayer2 = std::make_unique<PlayerAI>(swe::Color::black, false, mBoard);
+						}
 					}
 					else if (evt.key.code == sf::Mouse::Left && mStarted) {
 						if (mButtonBack.isMouseOver(static_cast<sf::Vector2f>(sf::Mouse::getPosition(mWindow)))) {
 							mStarted = false;
+							mAiVsAi = false;
 						}
+
+						bool nextPlayerWithoutDelay = true;
 						if (mPlayer1->turn()) {
 							mPlayer2->setTurn(mEnd ? false : true);
 							mPlayer1->setTurn(false);
+							if(mAiVsAi)
+								nextPlayerWithoutDelay = false;
 						}
-						if (mPlayer2->turn()) {
+						if (nextPlayerWithoutDelay && mPlayer2->turn()) {
 							mPlayer1->setTurn(mEnd ? false : true);
 							mPlayer2->setTurn(false);
 						}
@@ -100,6 +116,10 @@ namespace swe {
 		if (!mStarted)
 			drawTitleScreen();
 		else {
+			if (mAiVsAi) {
+				swe::Text mouseClickInfo(INFO_MOUSE_BUTTON_PRESS_V, mFont, 16, "press left mouse button for next move", sf::Color::Blue);
+				mouseClickInfo.draw(mWindow);
+			}
 			if (mPlayer1->getTurn()) {
 				sf::Sprite& turnInfo = mSpriteHandler.getTurnInfoWhite();
 				turnInfo.setPosition(TURN_INFO_POSITION_V);
@@ -142,6 +162,7 @@ namespace swe {
 
 		mButtonPlayFriend.draw(mWindow);
 		mButtonPlayAI.draw(mWindow);
+		mButtonPlayAIvsAI.draw(mWindow);
 	}
 
 	void ChessGame::loadFonts() {
