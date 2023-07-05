@@ -19,7 +19,7 @@ namespace swe {
             int newRow = mRow + direction;
             int newCol = mCol;
 
-            auto king = mChessBoard.getKing(mColor);
+            auto king = mChessBoard.getFigure(mColor, swe::FigureIndex::king);
 
             // normal forward
             if (newRow >= 0 && newRow < CHESS_SIZE && newCol >= 0 && newCol < CHESS_SIZE &&

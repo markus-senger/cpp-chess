@@ -16,7 +16,7 @@ namespace swe {
 
 			// down right
 			for (int i = 1; mRow + i < CHESS_SIZE && mCol + i < CHESS_SIZE; i++) {
-				bool threatened = withIsKingThreatened ? mChessBoard.getKing(mColor)->isKingThreatened(mRow, mCol, mRow + i, mCol + i) : false;
+				bool threatened = withIsKingThreatened ? mChessBoard.getFigure(mColor, swe::FigureIndex::king)->isKingThreatened(mRow, mCol, mRow + i, mCol + i) : false;
 				if (board[((mRow + i) * CHESS_SIZE) + (mCol + i)] != nullptr) {
 					if (board[((mRow + i) * CHESS_SIZE) + (mCol + i)]->getColor() != mColor && !threatened) {
 						possibleMoves.push_back(std::make_pair(convTo1D(mRow + i, mCol + i), true));
@@ -30,7 +30,7 @@ namespace swe {
 
 			// down left
 			for (int i = 1; mRow + i < CHESS_SIZE && mCol - i >= 0; i++) {
-				bool threatened = withIsKingThreatened ? mChessBoard.getKing(mColor)->isKingThreatened(mRow, mCol, mRow + i, mCol - i) : false;
+				bool threatened = withIsKingThreatened ? mChessBoard.getFigure(mColor, swe::FigureIndex::king)->isKingThreatened(mRow, mCol, mRow + i, mCol - i) : false;
 				if (board[((mRow + i) * CHESS_SIZE) + (mCol - i)] != nullptr) {
 					if (board[((mRow + i) * CHESS_SIZE) + (mCol - i)]->getColor() != mColor && !threatened) {
 						possibleMoves.push_back(std::make_pair(convTo1D(mRow + i, mCol - i), true));
@@ -43,7 +43,7 @@ namespace swe {
 
 			// top right
 			for (int i = 1; mRow - i >= 0 && mCol + i < CHESS_SIZE; i++) {
-				bool threatened = withIsKingThreatened ? mChessBoard.getKing(mColor)->isKingThreatened(mRow, mCol, mRow - i, mCol + i) : false;
+				bool threatened = withIsKingThreatened ? mChessBoard.getFigure(mColor, swe::FigureIndex::king)->isKingThreatened(mRow, mCol, mRow - i, mCol + i) : false;
 				if (board[((mRow - i) * CHESS_SIZE) + (mCol + i)] != nullptr) {
 					if (board[((mRow - i) * CHESS_SIZE) + (mCol + i)]->getColor() != mColor && !threatened) {
 						possibleMoves.push_back(std::make_pair(convTo1D(mRow - i, mCol + i), true));
@@ -56,7 +56,7 @@ namespace swe {
 
 			// top left
 			for (int i = 1; mRow - i >= 0 && mCol - i >= 0; i++) {
-				bool threatened = withIsKingThreatened ? mChessBoard.getKing(mColor)->isKingThreatened(mRow, mCol, mRow - i, mCol - i) : false;
+				bool threatened = withIsKingThreatened ? mChessBoard.getFigure(mColor, swe::FigureIndex::king)->isKingThreatened(mRow, mCol, mRow - i, mCol - i) : false;
 				if (board[((mRow - i) * CHESS_SIZE) + (mCol - i)] != nullptr) {
 					if (board[((mRow - i) * CHESS_SIZE) + (mCol - i)]->getColor() != mColor && !threatened) {
 						possibleMoves.push_back(std::make_pair(convTo1D(mRow - i, mCol - i), true));
@@ -69,7 +69,7 @@ namespace swe {
 
 			// up
 			for (int row = mRow + 1; row < CHESS_SIZE; row++) {
-				bool threatened = withIsKingThreatened ? mChessBoard.getKing(mColor)->isKingThreatened(mRow, mCol, row, mCol) : false;
+				bool threatened = withIsKingThreatened ? mChessBoard.getFigure(mColor, swe::FigureIndex::king)->isKingThreatened(mRow, mCol, row, mCol) : false;
 				if (board[(row * CHESS_SIZE) + mCol] != nullptr) {
 					if (board[(row * CHESS_SIZE) + mCol]->getColor() != mColor && !threatened) {
 						possibleMoves.push_back(std::make_pair(convTo1D(row, mCol), true));
@@ -84,7 +84,7 @@ namespace swe {
 
 			// down
 			for (int row = mRow - 1; row >= 0; row--) {
-				bool threatened = withIsKingThreatened ? mChessBoard.getKing(mColor)->isKingThreatened(mRow, mCol, row, mCol) : false;
+				bool threatened = withIsKingThreatened ? mChessBoard.getFigure(mColor, swe::FigureIndex::king)->isKingThreatened(mRow, mCol, row, mCol) : false;
 				if (board[(row * CHESS_SIZE) + mCol] != nullptr) {
 					if (board[(row * CHESS_SIZE) + mCol]->getColor() != mColor && !threatened) {
 						possibleMoves.push_back(std::make_pair(convTo1D(row, mCol), true));
@@ -99,7 +99,7 @@ namespace swe {
 
 			// right
 			for (int col = mCol + 1; col < CHESS_SIZE; col++) {
-				bool threatened = withIsKingThreatened ? mChessBoard.getKing(mColor)->isKingThreatened(mRow, mCol, mRow, col) : false;
+				bool threatened = withIsKingThreatened ? mChessBoard.getFigure(mColor, swe::FigureIndex::king)->isKingThreatened(mRow, mCol, mRow, col) : false;
 				if (board[(mRow * CHESS_SIZE) + col] != nullptr) {
 					if (board[(mRow * CHESS_SIZE) + col]->getColor() != mColor && !threatened) {
 						possibleMoves.push_back(std::make_pair(convTo1D(mRow, col), true));
@@ -114,7 +114,7 @@ namespace swe {
 
 			// left
 			for (int col = mCol - 1; col >= 0; col--) {
-				bool threatened = withIsKingThreatened ? mChessBoard.getKing(mColor)->isKingThreatened(mRow, mCol, mRow, col) : false;
+				bool threatened = withIsKingThreatened ? mChessBoard.getFigure(mColor, swe::FigureIndex::king)->isKingThreatened(mRow, mCol, mRow, col) : false;
 				if (board[(mRow * CHESS_SIZE) + col] != nullptr) {
 					if (board[(mRow * CHESS_SIZE) + col]->getColor() != mColor && !threatened) {
 						possibleMoves.push_back(std::make_pair(convTo1D(mRow, col), true));

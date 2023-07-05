@@ -21,7 +21,7 @@ namespace swe {
                 int newRow = mRow + dy[i];
                 int newCol = mCol + dx[i];
                 if (newRow >= 0 && newRow < CHESS_SIZE && newCol >= 0 && newCol < CHESS_SIZE) {
-                    bool threatened = withIsKingThreatened ? mChessBoard.getKing(mColor)->isKingThreatened(mRow, mCol, newRow, newCol) : false;
+                    bool threatened = withIsKingThreatened ? mChessBoard.getFigure(mColor, swe::FigureIndex::king)->isKingThreatened(mRow, mCol, newRow, newCol) : false;
                     if (!threatened) {
                         if (board[(newRow * CHESS_SIZE) + newCol] == nullptr) {
                             possibleMoves.push_back(std::make_pair(convTo1D(newRow, newCol), false));

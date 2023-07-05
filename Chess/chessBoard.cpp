@@ -154,10 +154,11 @@ namespace swe {
         return mGraveyard;
     }
 
-    std::shared_ptr<swe::ChessFigure> ChessBoard::getKing(swe::Color color) {
+    std::shared_ptr<swe::ChessFigure> ChessBoard::getFigure(swe::Color color, swe::FigureIndex type, int row, int col) {
         for (auto figure : mBoardWithFigures) {
-            if (figure != nullptr && figure->getColor() == color && figure->getType() == swe::FigureIndex::king)
-                return figure;
+            if (figure != nullptr && figure->getColor() == color && figure->getType() == type)
+                if((row == -1 || figure->getRow() == row) && (col == -1 || figure->getCol() == col))
+                    return figure;
         }
         return nullptr;
     }

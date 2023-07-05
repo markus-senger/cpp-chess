@@ -18,7 +18,7 @@ namespace swe {
 		std::array<std::shared_ptr<swe::ChessFigure>, 64>& getBoardWithFigures();
 		void setEnd(bool value, swe::Color winColor);
 		swe::Graveyard& getGraveyard();
-		std::shared_ptr<swe::ChessFigure> getKing(swe::Color color);
+		std::shared_ptr<swe::ChessFigure> getFigure(swe::Color color, swe::FigureIndex type, int row = -1, int col = -1);
 
 	private:
 		swe::ChessGame& mChessGame;
