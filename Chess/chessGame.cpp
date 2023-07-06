@@ -60,6 +60,8 @@ namespace swe {
 			sf::Event evt;
 			while (mWindow.pollEvent(evt)) {
 				if (evt.type == evt.Closed) {
+					if (mPlayer1 != nullptr) mPlayer1->closeEngine();
+					if (mPlayer2 != nullptr) mPlayer2->closeEngine();
 					mWindow.close();
 				}
 
