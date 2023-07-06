@@ -1,5 +1,5 @@
 # cpp-chess
-[NOT FINISHED YET] A small implementation of a chess game using C++ and SFML (Exercise for university)
+[NOT FINISHED YET] A small implementation of a chess game using C++, SFML and the chess engine "Stockfish 16" (Exercise for university)
 
 ![image](https://github.com/markus-senger/cpp-chess/assets/77236323/7215280b-a715-4284-8ea9-f5607b7e02b9)
 
