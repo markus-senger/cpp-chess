@@ -67,7 +67,7 @@ namespace swe {
 		int mCol;
 		std::vector<std::pair<int, bool>> mCurPossibleSteps;
 
-		void checkSpecialRules(int row, int col);
+		void checkSpecialRules(int row, int col, bool isAttack);
 		
 	};
 }

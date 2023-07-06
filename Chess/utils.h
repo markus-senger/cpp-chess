@@ -51,6 +51,8 @@ namespace swe {
 	const int			PROMOTION_FIELD_FIGURE_OFFSET_X_PX				= 8;
 	const int			PROMOTION_FIELD_FIGURE_OFFSET_Y_PX				= 3;
 	const float			PROMOTION_FIELD_FIGURE_SCALE					= 0.6f;
+	const int			ENPASSANT_ROW_WHITE								= 4;
+	const int			ENPASSANT_ROW_BLACK								= 3;
 
 	// graveyard
 	const float			GRAVEYARD_SCALEFAKTOR							= 0.7f;

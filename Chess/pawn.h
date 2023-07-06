@@ -72,6 +72,20 @@ namespace swe {
                 }
             }
 
+            // En-passant move
+            int enPassantRow = (mColor == Color::white) ? ENPASSANT_ROW_BLACK : ENPASSANT_ROW_WHITE;
+            int enPassantCol = mChessBoard.getEnPassantCol();
+            if (enPassantRow == mRow && (mCol - 1 == enPassantCol || mCol + 1 == enPassantCol)) {
+                auto enPassantPawn = board[(enPassantRow * CHESS_SIZE) + enPassantCol];
+                if (enPassantPawn != nullptr && enPassantPawn->getType() == swe::FigureIndex::pawn && enPassantPawn->getColor() != mColor) {
+                    bool threatened = withIsKingThreatened ? king->isKingThreatened(mRow, mCol, enPassantRow, enPassantCol) : false;
+                    if (!threatened) {
+                        possibleMoves.push_back(std::make_pair(convTo1D((mColor == Color::white) ? ENPASSANT_ROW_BLACK - 1 : ENPASSANT_ROW_WHITE + 1,
+                            enPassantCol), true));
+                    }
+                }
+            }
+
             return possibleMoves;
         }
 

@@ -71,7 +71,7 @@ namespace swe {
             switch (i) {
                 case 0:
                 {
-                    sf::Sprite queenSprite = mChessGame.getSpriteHandler().getPromotionFigureSprite(mBoardWithFigures[convTo1D(promotionRow, promotionCol)]->getColor(),
+                    sf::Sprite queenSprite = mChessGame.getSpriteHandler().getPromotionFigureSprite(mBoardWithFigures[convTo1D(mPromotionRow, mPromotionCol)]->getColor(),
                         FigureIndex::queen);
                     queenSprite.setPosition(posX + PROMOTION_FIELD_FIGURE_OFFSET_X_PX, posY + PROMOTION_FIELD_FIGURE_OFFSET_Y_PX);
                     queenSprite.scale(sf::Vector2(PROMOTION_FIELD_FIGURE_SCALE, PROMOTION_FIELD_FIGURE_SCALE));
@@ -80,7 +80,7 @@ namespace swe {
                 }
                 case 1:
                 {
-                    sf::Sprite rookSprite = mChessGame.getSpriteHandler().getPromotionFigureSprite(mBoardWithFigures[convTo1D(promotionRow, promotionCol)]->getColor(),
+                    sf::Sprite rookSprite = mChessGame.getSpriteHandler().getPromotionFigureSprite(mBoardWithFigures[convTo1D(mPromotionRow, mPromotionCol)]->getColor(),
                         FigureIndex::rook);
                     rookSprite.setPosition(posX + PROMOTION_FIELD_FIGURE_OFFSET_X_PX, posY + PROMOTION_FIELD_FIGURE_OFFSET_Y_PX);
                     rookSprite.scale(sf::Vector2(PROMOTION_FIELD_FIGURE_SCALE, PROMOTION_FIELD_FIGURE_SCALE));
@@ -89,7 +89,7 @@ namespace swe {
                 }
                 case 2:
                 {
-                    sf::Sprite bishopSprite = mChessGame.getSpriteHandler().getPromotionFigureSprite(mBoardWithFigures[convTo1D(promotionRow, promotionCol)]->getColor(),
+                    sf::Sprite bishopSprite = mChessGame.getSpriteHandler().getPromotionFigureSprite(mBoardWithFigures[convTo1D(mPromotionRow, mPromotionCol)]->getColor(),
                         FigureIndex::bishop);
                     bishopSprite.setPosition(posX + PROMOTION_FIELD_FIGURE_OFFSET_X_PX, posY + PROMOTION_FIELD_FIGURE_OFFSET_Y_PX);
                     bishopSprite.scale(sf::Vector2(PROMOTION_FIELD_FIGURE_SCALE, PROMOTION_FIELD_FIGURE_SCALE));
@@ -98,7 +98,7 @@ namespace swe {
                 }
                 case 3:
                 {
-                    sf::Sprite knightSprite = mChessGame.getSpriteHandler().getPromotionFigureSprite(mBoardWithFigures[convTo1D(promotionRow, promotionCol)]->getColor(),
+                    sf::Sprite knightSprite = mChessGame.getSpriteHandler().getPromotionFigureSprite(mBoardWithFigures[convTo1D(mPromotionRow, mPromotionCol)]->getColor(),
                         FigureIndex::knight);
                     knightSprite.setPosition(posX + PROMOTION_FIELD_FIGURE_OFFSET_X_PX, posY + PROMOTION_FIELD_FIGURE_OFFSET_Y_PX);
                     knightSprite.scale(sf::Vector2(PROMOTION_FIELD_FIGURE_SCALE, PROMOTION_FIELD_FIGURE_SCALE));
@@ -143,6 +143,7 @@ namespace swe {
                     }
                     else if (mSelectedFigure != nullptr) {
                         bool moveOk = mSelectedFigure->move(calcRowFromIdx(i), calcColFromIdx(i));
+                        
                         mSelectedFigure = nullptr;
                         return mPromotion ? false : moveOk;
                     }
@@ -165,43 +166,62 @@ namespace swe {
 
         switch (choice) {
         case 0:
-            replaceFigure(convTo1D(promotionRow, promotionCol), std::make_shared<Queen>(*this, mChessGame.getSpriteHandler(),
-                mChessGame.getSpriteHandler().getPromotionFigureSprite(mBoardWithFigures[convTo1D(promotionRow, promotionCol)]->getColor(), FigureIndex::queen), 
-                false, mBoardWithFigures[convTo1D(promotionRow, promotionCol)]->getColor(), promotionRow, promotionCol));
+            replaceFigure(convTo1D(mPromotionRow, mPromotionCol), std::make_shared<Queen>(*this, mChessGame.getSpriteHandler(),
+                mChessGame.getSpriteHandler().getPromotionFigureSprite(mBoardWithFigures[convTo1D(mPromotionRow, mPromotionCol)]->getColor(), FigureIndex::queen), 
+                false, mBoardWithFigures[convTo1D(mPromotionRow, mPromotionCol)]->getColor(), mPromotionRow, mPromotionCol));
 
             mPromotion = false;
-            mBoardWithFigures[convTo1D(promotionRow, promotionCol)]->checkEnd(mBoardWithFigures[convTo1D(promotionRow, promotionCol)]->getColor() == 
+            mBoardWithFigures[convTo1D(mPromotionRow, mPromotionCol)]->checkEnd(mBoardWithFigures[convTo1D(mPromotionRow, mPromotionCol)]->getColor() == 
                 swe::Color::white ? swe::Color::black : swe::Color::white);
             return true;
         case 1:
-            replaceFigure(convTo1D(promotionRow, promotionCol), std::make_shared<Rook>(*this, mChessGame.getSpriteHandler(),
-                mChessGame.getSpriteHandler().getPromotionFigureSprite(mBoardWithFigures[convTo1D(promotionRow, promotionCol)]->getColor(), FigureIndex::rook), 
-                false, mBoardWithFigures[convTo1D(promotionRow, promotionCol)]->getColor(), promotionRow, promotionCol));
+            replaceFigure(convTo1D(mPromotionRow, mPromotionCol), std::make_shared<Rook>(*this, mChessGame.getSpriteHandler(),
+                mChessGame.getSpriteHandler().getPromotionFigureSprite(mBoardWithFigures[convTo1D(mPromotionRow, mPromotionCol)]->getColor(), FigureIndex::rook), 
+                false, mBoardWithFigures[convTo1D(mPromotionRow, mPromotionCol)]->getColor(), mPromotionRow, mPromotionCol));
 
             mPromotion = false;
-            mBoardWithFigures[convTo1D(promotionRow, promotionCol)]->checkEnd(mBoardWithFigures[convTo1D(promotionRow, promotionCol)]->getColor() ==
+            mBoardWithFigures[convTo1D(mPromotionRow, mPromotionCol)]->checkEnd(mBoardWithFigures[convTo1D(mPromotionRow, mPromotionCol)]->getColor() ==
                 swe::Color::white ? swe::Color::black : swe::Color::white);
             return true;
         case 2:
-            replaceFigure(convTo1D(promotionRow, promotionCol), std::make_shared<Bishop>(*this, mChessGame.getSpriteHandler(),
-                mChessGame.getSpriteHandler().getPromotionFigureSprite(mBoardWithFigures[convTo1D(promotionRow, promotionCol)]->getColor(), FigureIndex::bishop), 
-                false, mBoardWithFigures[convTo1D(promotionRow, promotionCol)]->getColor(), promotionRow, promotionCol));
+            replaceFigure(convTo1D(mPromotionRow, mPromotionCol), std::make_shared<Bishop>(*this, mChessGame.getSpriteHandler(),
+                mChessGame.getSpriteHandler().getPromotionFigureSprite(mBoardWithFigures[convTo1D(mPromotionRow, mPromotionCol)]->getColor(), FigureIndex::bishop), 
+                false, mBoardWithFigures[convTo1D(mPromotionRow, mPromotionCol)]->getColor(), mPromotionRow, mPromotionCol));
             
             mPromotion = false;
-            mBoardWithFigures[convTo1D(promotionRow, promotionCol)]->checkEnd(mBoardWithFigures[convTo1D(promotionRow, promotionCol)]->getColor() ==
+            mBoardWithFigures[convTo1D(mPromotionRow, mPromotionCol)]->checkEnd(mBoardWithFigures[convTo1D(mPromotionRow, mPromotionCol)]->getColor() ==
                 swe::Color::white ? swe::Color::black : swe::Color::white);
             return true;
         case 3:
-            replaceFigure(convTo1D(promotionRow, promotionCol), std::make_shared<Knight>(*this, mChessGame.getSpriteHandler(),
-                mChessGame.getSpriteHandler().getPromotionFigureSprite(mBoardWithFigures[convTo1D(promotionRow, promotionCol)]->getColor(), FigureIndex::knight), 
-                false, mBoardWithFigures[convTo1D(promotionRow, promotionCol)]->getColor(), promotionRow, promotionCol));
+            replaceFigure(convTo1D(mPromotionRow, mPromotionCol), std::make_shared<Knight>(*this, mChessGame.getSpriteHandler(),
+                mChessGame.getSpriteHandler().getPromotionFigureSprite(mBoardWithFigures[convTo1D(mPromotionRow, mPromotionCol)]->getColor(), FigureIndex::knight), 
+                false, mBoardWithFigures[convTo1D(mPromotionRow, mPromotionCol)]->getColor(), mPromotionRow, mPromotionCol));
 
             mPromotion = false;
-            mBoardWithFigures[convTo1D(promotionRow, promotionCol)]->checkEnd(mBoardWithFigures[convTo1D(promotionRow, promotionCol)]->getColor() ==
+            mBoardWithFigures[convTo1D(mPromotionRow, mPromotionCol)]->checkEnd(mBoardWithFigures[convTo1D(mPromotionRow, mPromotionCol)]->getColor() ==
                 swe::Color::white ? swe::Color::black : swe::Color::white);
             return true;
         }
         return false;
+    }
+
+    void ChessBoard::setEnPassant(int col, int row) {
+        mEnPassantCol = col;
+        mEnPassantRow = row;
+    }
+
+    int ChessBoard::getEnPassantCol() {
+        return mEnPassantCol;
+    }
+
+    int ChessBoard::getEnPassantRow() {
+        return mEnPassantRow;
+    }
+
+    void ChessBoard::removeEnPassantFigure() {
+        mBoardWithFigures[convTo1D(mEnPassantRow, mEnPassantCol)] = nullptr;
+        mEnPassantCol = -1;
+        mEnPassantRow = -1;
     }
 
 	void ChessBoard::init(std::string const& fen) {
@@ -300,8 +320,8 @@ namespace swe {
 
     void ChessBoard::setPromotion(int row, int col) {
         mPromotion = true;
-        promotionRow = row;
-        promotionCol = col;
+        mPromotionRow = row;
+        mPromotionCol = col;
     }
 
     void ChessBoard::replaceFigure(int idx, std::shared_ptr<ChessFigure> newFigure) {

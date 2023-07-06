@@ -61,8 +61,8 @@ namespace swe {
 				if (mChessBoard.getBoardWithFigures()[convTo1D(row, col)]->mEssential)
 					mChessBoard.setEnd(true, mChessBoard.getBoardWithFigures()[convTo1D(mRow, mCol)]->mColor);
 			}
-
-			checkSpecialRules(row, col);
+			
+			checkSpecialRules(row, col, it->second);
 
 			mChessBoard.getBoardWithFigures()[convTo1D(row, col)] = mChessBoard.getBoardWithFigures()[convTo1D(mRow, mCol)];
 			mChessBoard.getBoardWithFigures()[convTo1D(mRow, mCol)] = nullptr;
@@ -89,7 +89,7 @@ namespace swe {
 		return false;
 	}
 
-	void ChessFigure::checkSpecialRules(int row, int col) {
+	void ChessFigure::checkSpecialRules(int row, int col, bool isAttack) {
 		// rochade
 		if (getType() == swe::FigureIndex::king && std::abs(mCol - col) == 2) {
 			if (col == 2) { // long rochade
@@ -97,16 +97,32 @@ namespace swe {
 				rook->move(rook->getRow(), 3, true);
 			}
 			else if (col == 6) { // short rochade
-				auto rook = mChessBoard.getFigure(mColor, swe::FigureIndex::rook, -1, 7);
+				auto rook = mChessBoard.getFigure(mColor, swe::FigureIndex::rook, -1, CHESS_SIZE - 1);
 				rook->move(rook->getRow(), 5, true);
 			}
 		}
 
 		// pawn promotion
 		if (getType() == swe::FigureIndex::pawn) {
-			if ((mColor == swe::Color::white && row == 0) || (mColor == swe::Color::black && row == 7)) {
+			if ((mColor == swe::Color::white && row == 0) || (mColor == swe::Color::black && row == CHESS_SIZE - 1)) {
 				mChessBoard.setPromotion(row, col);
 			}
+		}
+
+		// en passant
+		if (isAttack && mChessBoard.getBoardWithFigures()[convTo1D(row, col)] == nullptr) {
+			mChessBoard.getGraveyard().add(mChessBoard.getBoardWithFigures()[convTo1D(mChessBoard.getEnPassantRow(), mChessBoard.getEnPassantCol())], 
+				mChessBoard.getBoardWithFigures()[convTo1D(mChessBoard.getEnPassantRow(), mChessBoard.getEnPassantCol())]->getColor());
+			mChessBoard.removeEnPassantFigure();
+		}
+
+		if (mType == swe::FigureIndex::pawn && mFirstMove && ((mColor == swe::Color::white && row == ENPASSANT_ROW_WHITE)
+			|| (mColor == swe::Color::black && row == ENPASSANT_ROW_BLACK))) {
+
+			mChessBoard.setEnPassant(col, row);
+		}
+		else {
+			mChessBoard.setEnPassant(-1, -1);
 		}
 	}
 

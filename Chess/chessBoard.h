@@ -23,6 +23,10 @@ namespace swe {
 		bool getPromotion();
 		bool isActivePlayerAI();
 		bool handlePromotion(int idx = -1);
+		void setEnPassant(int col, int row);
+		int getEnPassantCol();
+		int getEnPassantRow();
+		void removeEnPassantFigure();
 
 	private:
 		swe::ChessGame& mChessGame;
@@ -30,8 +34,10 @@ namespace swe {
 		std::array<std::shared_ptr<swe::ChessFigure>, CHESS_NUM_OF_FIELDS> mBoardWithFigures{};
 		std::shared_ptr<ChessFigure> mSelectedFigure{};
 		bool mPromotion;
-		int promotionRow;
-		int promotionCol;
+		int mPromotionRow;
+		int mPromotionCol;
+		int mEnPassantCol;
+		int mEnPassantRow;
 
 		void drawPromotionBoard(sf::RenderWindow& window);
 		void replaceFigure(int idx, std::shared_ptr<ChessFigure> newFigure);
