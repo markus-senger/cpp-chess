@@ -81,13 +81,13 @@ namespace swe {
 						else if (mButtonPlayAI.isMouseOver(static_cast<sf::Vector2f>(sf::Mouse::getPosition(mWindow)))) {
 							mStarted = true;
 							mPlayer1 = std::make_unique<PlayerHuman>(swe::Color::white, true, mBoard);
-							mPlayer2 = std::make_unique<PlayerAI>(swe::Color::black, false, mBoard);
+							mPlayer2 = std::make_unique<PlayerAIStockfish>(swe::Color::black, false, mBoard);
 						}
 						else if (mButtonPlayAIvsAI.isMouseOver(static_cast<sf::Vector2f>(sf::Mouse::getPosition(mWindow)))) {
 							mStarted = true;
 							mAiVsAi = true;
-							mPlayer1 = std::make_unique<PlayerAI>(swe::Color::white, true, mBoard);
-							mPlayer2 = std::make_unique<PlayerAI>(swe::Color::black, false, mBoard);
+							mPlayer1 = std::make_unique<PlayerAIStockfish>(swe::Color::white, true, mBoard);
+							mPlayer2 = std::make_unique<PlayerAIStockfish>(swe::Color::black, false, mBoard);
 						}
 					}
 					else if (evt.key.code == sf::Mouse::Left && mStarted) {
@@ -103,6 +103,11 @@ namespace swe {
 							if(mAiVsAi)
 								nextPlayerWithoutDelay = false;
 						}
+
+						mWindow.clear(sf::Color::White);
+						draw();
+						mWindow.display();
+
 						if (nextPlayerWithoutDelay && mPlayer2->turn()) {
 							mPlayer1->setTurn(mEnd ? false : true);
 							mPlayer2->setTurn(false);
@@ -112,9 +117,7 @@ namespace swe {
 			}
 
 			mWindow.clear(sf::Color::White);
-
 			draw();
-
 			mWindow.display();
 		}
 	}

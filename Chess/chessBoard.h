@@ -27,6 +27,8 @@ namespace swe {
 		int getEnPassantCol();
 		int getEnPassantRow();
 		void removeEnPassantFigure();
+		std::string getCurBoardFEN();
+		int getPosOfBoardWithString(std::string pos, bool getFigure);
 
 	private:
 		swe::ChessGame& mChessGame;

@@ -171,7 +171,8 @@
     <ClInclude Include="knight.h" />
     <ClInclude Include="pawn.h" />
     <ClInclude Include="player.h" />
-    <ClInclude Include="playerAI.h" />
+    <ClInclude Include="playerAIRandom.h" />
+    <ClInclude Include="playerAIStockfish.h" />
     <ClInclude Include="playerHuman.h" />
     <ClInclude Include="queen.h" />
     <ClInclude Include="rook.h" />

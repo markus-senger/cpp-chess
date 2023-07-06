@@ -62,7 +62,7 @@ namespace swe {
 					mChessBoard.setEnd(true, mChessBoard.getBoardWithFigures()[convTo1D(mRow, mCol)]->mColor);
 			}
 			
-			checkSpecialRules(row, col, it->second);
+			checkSpecialRules(row, col, force ? false : it->second);
 
 			mChessBoard.getBoardWithFigures()[convTo1D(row, col)] = mChessBoard.getBoardWithFigures()[convTo1D(mRow, mCol)];
 			mChessBoard.getBoardWithFigures()[convTo1D(mRow, mCol)] = nullptr;
@@ -81,7 +81,6 @@ namespace swe {
 				std::srand(std::time(nullptr));
 				mChessBoard.handlePromotion(std::rand() % 4);
 			}
-
 
 			return true;
 		}

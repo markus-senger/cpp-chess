@@ -47,7 +47,7 @@
     <ClInclude Include="text.h">
       <Filter>Headerdateien\UI</Filter>
     </ClInclude>
-    <ClInclude Include="playerAI.h">
+    <ClInclude Include="playerAIRandom.h">
       <Filter>Headerdateien</Filter>
     </ClInclude>
     <ClInclude Include="playerHuman.h">
@@ -90,6 +90,9 @@
       <Filter>Headerdateien</Filter>
     </ClInclude>
     <ClInclude Include="utils.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="playerAIStockfish.h">
       <Filter>Headerdateien</Filter>
     </ClInclude>
   </ItemGroup>

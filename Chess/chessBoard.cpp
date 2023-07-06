@@ -143,7 +143,6 @@ namespace swe {
                     }
                     else if (mSelectedFigure != nullptr) {
                         bool moveOk = mSelectedFigure->move(calcRowFromIdx(i), calcColFromIdx(i));
-                        
                         mSelectedFigure = nullptr;
                         return mPromotion ? false : moveOk;
                     }
@@ -222,6 +221,60 @@ namespace swe {
         mBoardWithFigures[convTo1D(mEnPassantRow, mEnPassantCol)] = nullptr;
         mEnPassantCol = -1;
         mEnPassantRow = -1;
+    }
+
+    std::string ChessBoard::getCurBoardFEN() {
+        std::string fen;
+        int emptyCount = 0;
+
+        for (int row = 0; row < CHESS_SIZE; row++) {
+            for (int col = 0; col < CHESS_SIZE; col++) {
+                auto figure = mBoardWithFigures[convTo1D(row, col)];
+                if (figure) {
+                    if (emptyCount > 0) {
+                        fen += std::to_string(emptyCount);
+                        emptyCount = 0;
+                    }
+
+                    char type = ' ';
+                    switch (figure->getType()) {
+                        case swe::FigureIndex::pawn:    type = 'P'; break;
+                        case swe::FigureIndex::king:    type = 'K'; break;
+                        case swe::FigureIndex::queen:   type = 'Q'; break;
+                        case swe::FigureIndex::knight:  type = 'N'; break;
+                        case swe::FigureIndex::bishop:  type = 'B'; break;
+                        case swe::FigureIndex::rook:    type = 'R'; break;
+                    }
+                    if (figure->getColor() == swe::Color::white && type != ' ')
+                        fen += type;
+                    else if (type != ' ')
+                        fen += std::tolower(type);
+                }
+                else {
+                    emptyCount++;
+                }
+            }
+            if (emptyCount > 0) {
+                fen += std::to_string(emptyCount);
+                emptyCount = 0;
+            }
+
+            if (row < CHESS_SIZE) {
+                fen += '/';
+            }
+        }
+
+        return fen;
+    }
+
+    int ChessBoard::getPosOfBoardWithString(std::string pos, bool getFigure) {
+        if (pos.length() == 4) {
+            std::transform(pos.begin(), pos.end(), pos.begin(), [](unsigned char c) { return std::tolower(c); });
+            int col = pos[getFigure ? 0 : 2] - 'a';
+            int row = std::abs(pos[getFigure ? 1 : 3] - '0' - CHESS_SIZE - 1) - 1;
+            return convTo1D(row, col);
+        }
+        return -1;
     }
 
 	void ChessBoard::init(std::string const& fen) {
