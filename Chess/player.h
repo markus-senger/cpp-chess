@@ -27,6 +27,8 @@ namespace swe {
 			return mPreparation;
 		}
 
+		virtual void closeEngine() {}
+
 	protected:
 		swe::Color mColor;
 		bool mIsAi;

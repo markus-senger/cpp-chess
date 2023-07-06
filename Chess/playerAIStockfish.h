@@ -85,15 +85,9 @@ namespace swe {
 			CreateProcess(NULL, path, NULL, NULL, TRUE, 0, NULL, NULL, &sti, &pi);
 		}
 
-		void closeEngine()
+		void closeEngine() override
 		{
 			WriteFile(pipin_w, "quit\n", 5, &writ, NULL);
-			if (pipin_w != NULL) CloseHandle(pipin_w);
-			if (pipin_r != NULL) CloseHandle(pipin_r);
-			if (pipout_w != NULL) CloseHandle(pipout_w);
-			if (pipout_r != NULL) CloseHandle(pipout_r);
-			if (pi.hProcess != NULL) CloseHandle(pi.hProcess);
-			if (pi.hThread != NULL) CloseHandle(pi.hThread);
 		}
 
 	private:

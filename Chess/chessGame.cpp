@@ -75,6 +75,8 @@ namespace swe {
 					}
 					else if (evt.key.code == sf::Mouse::Left && !mStarted) {
 						mBoard.init();
+						if (mPlayer1 != nullptr) mPlayer1->closeEngine();
+						if (mPlayer2 != nullptr) mPlayer2->closeEngine();
 						if (mButtonPlayFriend.isMouseOver(static_cast<sf::Vector2f>(sf::Mouse::getPosition(mWindow)))) {
 							mStarted = true;
 							mPlayer1 = std::make_unique<PlayerHuman>(swe::Color::white, true, mBoard);
