@@ -24,7 +24,7 @@ namespace swe {
 
 		virtual std::vector<int> getAttackSteps(std::array<std::shared_ptr<swe::ChessFigure>, CHESS_NUM_OF_FIELDS> const& board);
 
-		bool move(int row, int col, bool force = false);
+		bool move(int row, int col, bool force = false, char promotion = ' ');
 
 		virtual void draw(sf::RenderWindow& window, sf::Vector2f pos);
 

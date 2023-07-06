@@ -49,7 +49,7 @@ namespace swe {
 		throw std::logic_error("function not implemented");
 	}
 
-	bool ChessFigure::move(int row, int col, bool force) {
+	bool ChessFigure::move(int row, int col, bool force, char promotion) {
 		int move = convTo1D(row, col);
 		auto it = std::find_if(mCurPossibleSteps.begin(), mCurPossibleSteps.end(), [move](const std::pair<int, bool>& entry) {
 			return entry.first == move;
@@ -78,8 +78,15 @@ namespace swe {
 			}
 
 			if (mChessBoard.getPromotion() && mChessBoard.isActivePlayerAI()) {
-				std::srand(std::time(nullptr));
-				mChessBoard.handlePromotion(std::rand() % 4);
+				switch (promotion) {
+					case 'q': mChessBoard.handlePromotion(0); break;
+					case 'r': mChessBoard.handlePromotion(1); break;
+					case 'b': mChessBoard.handlePromotion(2); break;
+					case 'k': mChessBoard.handlePromotion(3); break;
+					default: 
+						std::srand(std::time(nullptr));
+						mChessBoard.handlePromotion(std::rand() % 4);
+				}
 			}
 
 			return true;

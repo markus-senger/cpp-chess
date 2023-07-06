@@ -6,7 +6,8 @@
 namespace swe {
 	class Player {
 	public:
-		Player(swe::Color color, bool isAi, bool turn, swe::ChessBoard& board) : mColor{ color }, mIsAi{ isAi }, mTurn{ turn }, mBoard{ board } {}
+		Player(swe::Color color, bool isAi, bool turn, swe::ChessBoard& board, bool preparation) : 
+			mColor{ color }, mIsAi{ isAi }, mTurn{ turn }, mBoard{ board }, mPreparation{ preparation } {}
 
 		virtual bool turn() = 0;
 
@@ -22,10 +23,15 @@ namespace swe {
 			return mIsAi;
 		}
 
+		bool getPreparation() {
+			return mPreparation;
+		}
+
 	protected:
 		swe::Color mColor;
 		bool mIsAi;
 		bool mTurn;
 		swe::ChessBoard& mBoard;
+		bool mPreparation;
 	};
 }

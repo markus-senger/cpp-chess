@@ -63,7 +63,9 @@ namespace swe {
 					mWindow.close();
 				}
 
-				if (evt.type == sf::Event::MouseButtonPressed) {
+				if (evt.type == sf::Event::MouseButtonPressed || (mPlayer1 != nullptr && mPlayer1->getTurn() && mPlayer1->getPreparation()) || 
+					(mPlayer2 != nullptr && mPlayer2->getTurn() && mPlayer2->getPreparation())) {
+
 					if (mEnd) {
 						if (mButtonBack.isMouseOver(static_cast<sf::Vector2f>(sf::Mouse::getPosition(mWindow))) ||
 							mButtonBackToMenu.isMouseOver(static_cast<sf::Vector2f>(sf::Mouse::getPosition(mWindow)))) {
@@ -90,7 +92,7 @@ namespace swe {
 							mPlayer2 = std::make_unique<PlayerAIStockfish>(swe::Color::black, false, mBoard);
 						}
 					}
-					else if (evt.key.code == sf::Mouse::Left && mStarted) {
+					else if (mStarted && (evt.key.code == sf::Mouse::Left || (mPlayer1->getTurn() && mPlayer1->getPreparation()) || (mPlayer2->getTurn() && mPlayer2->getPreparation()))) {
 						if (mButtonBack.isMouseOver(static_cast<sf::Vector2f>(sf::Mouse::getPosition(mWindow)))) {
 							mStarted = false;
 							mAiVsAi = false;
@@ -100,14 +102,13 @@ namespace swe {
 						if (mPlayer1->turn()) {
 							mPlayer2->setTurn(mEnd ? false : true);
 							mPlayer1->setTurn(false);
-							if(mAiVsAi)
+							if (mAiVsAi)
 								nextPlayerWithoutDelay = false;
 						}
 
 						mWindow.clear(sf::Color::White);
 						draw();
 						mWindow.display();
-
 						if (nextPlayerWithoutDelay && mPlayer2->turn()) {
 							mPlayer1->setTurn(mEnd ? false : true);
 							mPlayer2->setTurn(false);
@@ -126,10 +127,18 @@ namespace swe {
 		if (!mStarted)
 			drawTitleScreen();
 		else {
-			if (mAiVsAi) {
+			if ((mPlayer1 != nullptr && mPlayer1->getTurn() && mPlayer1->getPreparation()) ||
+				(mPlayer2 != nullptr && mPlayer2->getTurn() && mPlayer2->getPreparation())) {
+
+				swe::Text AICalcInfo(INFO_MOUSE_BUTTON_PRESS_V, mFont, 16, "AI calculates the next move", sf::Color::Magenta);
+				AICalcInfo.draw(mWindow);
+			}
+			else if (mAiVsAi) {
+
 				swe::Text mouseClickInfo(INFO_MOUSE_BUTTON_PRESS_V, mFont, 16, "press left mouse button for next move", sf::Color::Blue);
 				mouseClickInfo.draw(mWindow);
 			}
+
 			if (mPlayer1->getTurn()) {
 				sf::Sprite& turnInfo = mSpriteHandler.getTurnInfoWhite();
 				turnInfo.setPosition(TURN_INFO_POSITION_V);

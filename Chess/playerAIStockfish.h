@@ -10,7 +10,7 @@
 namespace swe {
 	class PlayerAIStockfish : public Player {
 	public:
-		PlayerAIStockfish(swe::Color color, bool turn, swe::ChessBoard& board) : Player(color, true, turn, board) {
+		PlayerAIStockfish(swe::Color color, bool turn, swe::ChessBoard& board) : Player(color, true, turn, board, false) {
 			startEngine();
 		}
 
@@ -20,34 +20,43 @@ namespace swe {
 
 		bool turn() override {
 			if (mTurn) {
-				std::string str;
-				std::string position = "position fen " + mBoard.getCurBoardFEN() + (mColor == swe::Color::white ? " w" : " b") + "\ngo depth 8\n";
-				std::string t = mBoard.getCurBoardFEN();
+				if (!mPreparation) {
+					std::string position = "position fen " + mBoard.getCurBoardFEN() + (mColor == swe::Color::white ? " w" : " b") + "\ngo depth 8\n";
 
+					WriteFile(pipin_w, position.c_str(), position.length(), &writ, NULL);
+					mPreparation = true;
+					clock.restart();
+				}
+				else if (clock.getElapsedTime().asMilliseconds() > 10) {
+					std::string str;
+					PeekNamedPipe(pipout_r, buffer, sizeof(buffer), &read, &available, NULL);
+					do
+					{
+						ZeroMemory(buffer, sizeof(buffer));
+						if (!ReadFile(pipout_r, buffer, sizeof(buffer), &read, NULL) || !read) break;
+						buffer[read] = 0;
+						str += (char*)buffer;
+					} while (read >= sizeof(buffer));
 
-				WriteFile(pipin_w, position.c_str(), position.length(), &writ, NULL);
-				Sleep(500);
+					int n = str.find("bestmove");
+					if (n != -1) {
+						str = str.substr(n + 9, 5);
+						char promotion = ' ';
+						if (std::count(str.begin(), str.end(), 'O') == 3) str = (mColor == swe::Color::white ? "e1c1" : "e8c8");
+						else if (std::count(str.begin(), str.end(), 'O') == 2) str = (mColor == swe::Color::white ? "e1g1" : "e8g8");
+						else if (str[4] != ' ') {
+							promotion = str[4];
+							str = str.substr(0, 4);
+						}
+						else str = str.substr(0, 4);
+						auto figure = mBoard.getBoardWithFigures()[mBoard.getPosOfBoardWithString(str, true)];
+						figure->initPossibleSteps();
+						figure->move(calcRowFromIdx(mBoard.getPosOfBoardWithString(str, false)),
+								calcColFromIdx(mBoard.getPosOfBoardWithString(str, false)), false, promotion);
 
-				PeekNamedPipe(pipout_r, buffer, sizeof(buffer), &read, &available, NULL);
-				do
-				{
-					ZeroMemory(buffer, sizeof(buffer));
-					if (!ReadFile(pipout_r, buffer, sizeof(buffer), &read, NULL) || !read) break;
-					buffer[read] = 0;
-					str += (char*)buffer;
-				} while (read >= sizeof(buffer));
-
-				int n = str.find("bestmove");
-				if (n != -1) {
-					str = str.substr(n + 9, 5);
-					if (std::count(str.begin(), str.end(), 'O') == 3) str = (mColor == swe::Color::white ? "e1c1" : "e8c8");
-					else if (std::count(str.begin(), str.end(), 'O') == 2) str = (mColor == swe::Color::white ? "e1g1" : "e8g8");
-					else str = str.substr(0, 4);
-					auto figure = mBoard.getBoardWithFigures()[mBoard.getPosOfBoardWithString(str, true)];
-					figure->initPossibleSteps();
-					figure->move(calcRowFromIdx(mBoard.getPosOfBoardWithString(str, false)),
-							calcColFromIdx(mBoard.getPosOfBoardWithString(str, false)));
-					return true;
+						mPreparation = false;
+						return true;
+					}
 				}
 			}
 			return false;
@@ -94,5 +103,6 @@ namespace swe {
 		HANDLE pipin_w, pipin_r, pipout_w, pipout_r;
 		BYTE buffer[4096];
 		DWORD writ, excode, read, available;
+		sf::Clock clock;
 	};
 }

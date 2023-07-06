@@ -7,7 +7,7 @@
 namespace swe {
 	class PlayerAIRandom : public Player {
 	public:
-		PlayerAIRandom(swe::Color color, bool turn, swe::ChessBoard& board) : Player(color, true, turn, board) {}
+		PlayerAIRandom(swe::Color color, bool turn, swe::ChessBoard& board) : Player(color, true, turn, board, false) {}
 
 		bool turn() override {
 			if (mTurn) {
