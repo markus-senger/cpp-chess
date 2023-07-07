@@ -29,6 +29,8 @@ namespace swe {
 		void removeEnPassantFigure();
 		std::string getCurBoardFEN();
 		int getPosOfBoardWithString(std::string pos, bool getFigure);
+		void setLastMoveOrgIdx(int idx);
+		void setLastMoveNewIdx(int idx);
 
 	private:
 		swe::ChessGame& mChessGame;
@@ -40,6 +42,10 @@ namespace swe {
 		int mPromotionCol;
 		int mEnPassantCol;
 		int mEnPassantRow;
+
+		bool mShowLastMove;
+		int mLastMoveOrgIdx;
+		int mLastMoveNewIdx;
 
 		void drawPromotionBoard(sf::RenderWindow& window);
 		void replaceFigure(int idx, std::shared_ptr<ChessFigure> newFigure);

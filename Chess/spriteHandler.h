@@ -72,6 +72,10 @@ namespace swe {
 			}
 		}
 
+		sf::Sprite& getLastMoveSymbolSprite() {
+			return mSLastMoveSymbol;
+		}
+
 	private:
 		sf::Texture mTFigures;
 		sf::Sprite mSFiguresWhite[CHESS_NUM_DIFFERENT_FIGURES];
@@ -109,6 +113,9 @@ namespace swe {
 
 		sf::Texture mTPromotionBoardSelectedField;
 		sf::Sprite mSPromotionBoardSelectedField;
+
+		sf::Texture mTLastMoveSymbol;
+		sf::Sprite mSLastMoveSymbol;
 
 
 		void createSprites() {
@@ -149,6 +156,9 @@ namespace swe {
 
 			mTPromotionBoardSelectedField.loadFromFile("Images/promotionBoardSelectedField.png");
 			mSPromotionBoardSelectedField.setTexture(mTPromotionBoardSelectedField);
+
+			mTLastMoveSymbol.loadFromFile("Images/lastMoveSymbol.png");
+			mSLastMoveSymbol.setTexture(mTLastMoveSymbol);
 		}
 
 		void cutFiguresFromImage(sf::Sprite(&figures)[6], sf::Texture const& tFigures, int const yOffset) {

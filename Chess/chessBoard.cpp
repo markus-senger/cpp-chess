@@ -14,7 +14,7 @@
 
 namespace swe {
 	ChessBoard::ChessBoard(swe::ChessGame& chessGame)
-        : mChessGame{ chessGame }, mPromotion{ false }{
+        : mChessGame{ chessGame }, mPromotion{ false }, mShowLastMove{ false }{
 
 		mChessGame.getSpriteHandler().getBoardSprite().setPosition(sf::Vector2f(0, CHESS_BOARD_HEADER_SIZE_PX));
 	}
@@ -23,6 +23,18 @@ namespace swe {
         mGraveyard.draw(window, mChessGame.getSpriteHandler().getBoardSprite().getLocalBounds().width, 
             mChessGame.getSpriteHandler().getBoardSprite().getLocalBounds().height);
 		window.draw(mChessGame.getSpriteHandler().getBoardSprite());
+
+        // last move
+        if (mShowLastMove) {
+            sf::Sprite lastMoveOrgPosSprite = mChessGame.getSpriteHandler().getLastMoveSymbolSprite();
+            sf::Sprite lastMoveNewPosSprite = mChessGame.getSpriteHandler().getLastMoveSymbolSprite();
+            lastMoveOrgPosSprite.setPosition(sf::Vector2f((calcColFromIdx(mLastMoveOrgIdx)) * CHESS_FIELD_SIZE_PX + CHESS_BOARD_WITDH_OFFSET_PX,
+                (calcRowFromIdx(mLastMoveOrgIdx)) * CHESS_FIELD_SIZE_PX + CHESS_BOARD_HEIGHT_OFFSET_PX));
+            lastMoveNewPosSprite.setPosition(sf::Vector2f((calcColFromIdx(mLastMoveNewIdx)) * CHESS_FIELD_SIZE_PX + CHESS_BOARD_WITDH_OFFSET_PX,
+                (calcRowFromIdx(mLastMoveNewIdx)) * CHESS_FIELD_SIZE_PX + CHESS_BOARD_HEIGHT_OFFSET_PX));
+            window.draw(lastMoveOrgPosSprite);
+            window.draw(lastMoveNewPosSprite);
+        }
 
         int i = 0;
         int j = 0;
@@ -278,6 +290,7 @@ namespace swe {
     }
 
 	void ChessBoard::init(std::string const& fen) {
+        mShowLastMove = false;
         mPromotion = false;
         mBoardWithFigures.fill(nullptr);
         mGraveyard.clear();
@@ -392,5 +405,14 @@ namespace swe {
     
     bool ChessBoard::isActivePlayerAI() {
         return mChessGame.isActivePlayerAI();
+    }
+
+    void ChessBoard::setLastMoveOrgIdx(int idx) {
+        mLastMoveOrgIdx = idx;
+    }
+
+    void ChessBoard::setLastMoveNewIdx(int idx) {
+        mShowLastMove = true;
+        mLastMoveNewIdx = idx;
     }
 }

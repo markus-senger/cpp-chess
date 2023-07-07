@@ -49,7 +49,7 @@ namespace swe {
 		throw std::logic_error("function not implemented");
 	}
 
-	bool ChessFigure::move(int row, int col, bool force, char promotion) {
+	bool ChessFigure::move(int row, int col, bool force, char promotion, bool lastMove) {
 		int move = convTo1D(row, col);
 		auto it = std::find_if(mCurPossibleSteps.begin(), mCurPossibleSteps.end(), [move](const std::pair<int, bool>& entry) {
 			return entry.first == move;
@@ -64,12 +64,18 @@ namespace swe {
 			
 			checkSpecialRules(row, col, force ? false : it->second);
 
+			if (lastMove)
+				mChessBoard.setLastMoveOrgIdx(convTo1D(mRow, mCol));
+
 			mChessBoard.getBoardWithFigures()[convTo1D(row, col)] = mChessBoard.getBoardWithFigures()[convTo1D(mRow, mCol)];
 			mChessBoard.getBoardWithFigures()[convTo1D(mRow, mCol)] = nullptr;
 			mRow = row;
 			mCol = col;
 			mSelected = false;
 			mFirstMove = false;
+
+			if (lastMove)
+				mChessBoard.setLastMoveNewIdx(convTo1D(row, col));
 	
 			bool blackCheck = checkEnd(swe::Color::black);
 			bool whiteCheck = checkEnd(swe::Color::white);
@@ -100,11 +106,11 @@ namespace swe {
 		if (getType() == swe::FigureIndex::king && std::abs(mCol - col) == 2) {
 			if (col == 2) { // long rochade
 				auto rook = mChessBoard.getFigure(mColor, swe::FigureIndex::rook, -1, 0);
-				rook->move(rook->getRow(), 3, true);
+				rook->move(rook->getRow(), 3, true, ' ', false);
 			}
 			else if (col == 6) { // short rochade
 				auto rook = mChessBoard.getFigure(mColor, swe::FigureIndex::rook, -1, CHESS_SIZE - 1);
-				rook->move(rook->getRow(), 5, true);
+				rook->move(rook->getRow(), 5, true, ' ', false);
 			}
 		}
 
