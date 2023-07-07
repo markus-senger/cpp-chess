@@ -7,6 +7,9 @@ namespace swe {
 	public:
 		PlayerHuman(swe::Color color, bool turn, swe::ChessBoard& board) : Player(color, false, turn, board, false) {}
 
+
+		// ----- pure virtuals override ---------------------------------------------------------------------------------
+
 		bool turn() override {
 			if (mTurn && mBoard.handleEvent(mColor)) {
 				mTurn = !mTurn;

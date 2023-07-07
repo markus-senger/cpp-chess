@@ -14,31 +14,23 @@ namespace swe {
 	class ChessGame {
 	public:
 		ChessGame();
+
+		// methods
+		bool isActivePlayerAI() const;
+
+		// getter
 		sf::RenderWindow& getWindow();
 		swe::SpriteHandler& getSpriteHandler();
-		void setStarted(bool value);
+
+		// setter
+		void setStarted(bool const value);
 		void setEnd(bool value, swe::Color winColor);
-		bool isActivePlayerAI();
 
 
 	private:
-		void createWindow();
-		void draw();
-		void drawEndScreen();
-		void drawTitleScreen();
-		void loadFonts();
-
-		float mWitdh;
-		float mHeight;
 		sf::RenderWindow mWindow;
 		swe::SpriteHandler mSpriteHandler;
-
 		sf::Font mFont;
-
-		bool mStarted;
-		bool mEnd;
-		bool mAiVsAi;
-		swe::Color mWinColor;
 
 		swe::Button mButtonPlayFriend;
 		swe::Button mButtonPlayAI;
@@ -50,5 +42,20 @@ namespace swe {
 		std::unique_ptr<swe::Player> mPlayer2;
 
 		swe::ChessBoard mBoard;
+
+		float mWitdh;
+		float mHeight;
+		bool mStarted;
+		bool mEnd;
+		bool mAiVsAi;
+		swe::Color mWinColor;
+
+		// private methods
+		void createWindow();
+		void eventLoop();
+		void draw();
+		void drawEndScreen();
+		void drawTitleScreen();
+		void loadFonts();
 	};
 }

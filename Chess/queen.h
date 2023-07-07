@@ -11,7 +11,9 @@ namespace swe {
 
 		}
 
-		std::vector<std::pair<int, bool>> getPossibleSteps(std::array<std::shared_ptr<swe::ChessFigure>, CHESS_NUM_OF_FIELDS> const& board, bool withIsKingThreatened = true) override {
+		// ----- pure virtuals override ---------------------------------------------------------------------------------
+
+		std::vector<std::pair<int, bool>> getPossibleSteps(std::array<std::shared_ptr<swe::ChessFigure>, CHESS_NUM_OF_FIELDS> const& board, bool const withIsKingThreatened = true) const override {
 			std::vector<std::pair<int, bool>> possibleMoves{};
 
 			// down right

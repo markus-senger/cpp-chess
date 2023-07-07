@@ -6,7 +6,7 @@
 namespace swe {
     class Text {
     public:
-        Text(sf::Vector2f const& position, sf::Font const& font, unsigned int const fontSize, std::string const& str, sf::Color color = sf::Color::Black) {
+        Text(sf::Vector2f const& position, sf::Font const& font, unsigned int const fontSize, std::string const& str, sf::Color const color = sf::Color::Black) {
             text.setFont(font);
             text.setCharacterSize(fontSize);
             text.setString(str);
@@ -16,7 +16,7 @@ namespace swe {
             text.setPosition(position);
         }
 
-        void draw(sf::RenderWindow& window) {
+        void draw(sf::RenderWindow& window) const {
             window.draw(text);
         }
 

@@ -7,7 +7,7 @@ namespace swe {
 		none, black, white
 	};
 
-    static std::string colorToString(Color value)
+    static std::string colorToString(Color const value)
     {
         switch (value)
         {

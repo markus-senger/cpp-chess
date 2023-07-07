@@ -11,13 +11,18 @@
 namespace swe {
 	class PlayerAIStockfish : public Player {
 	public:
-		PlayerAIStockfish(swe::Color color, bool turn, swe::ChessBoard& board) : mSkillLevel{ 20 }, Player(color, true, turn, board, false) {
+		PlayerAIStockfish(swe::Color color, bool turn, swe::ChessBoard& board, int delayTime = 10) : mSkillLevel{ 20 }, mDelayTime{ delayTime },
+				Player(color, true, turn, board, false) {
+
 			startEngine();
 		}
 
 		~PlayerAIStockfish() {
 			closeEngine();
 		}
+
+
+		// ----- pure virtuals override ---------------------------------------------------------------------------------
 
 		bool turn() override {
 			if (mTurn) {
@@ -32,20 +37,20 @@ namespace swe {
 						+ (mBoard.getRochadePossibleWhite() ? " KQ" : "") + (mBoard.getRochadePossibleBlack() ? " kq" : "") + "\n"
 						+ "go depth " + std::to_string(randomDepth) + "\n";
 
-					WriteFile(pipin_w, position.c_str(), position.length(), &writ, NULL);
+					WriteFile(mPipIn_w, position.c_str(), position.length(), &mWrit, NULL);
 					mPreparation = true;
-					clock.restart();
+					mClock.restart();
 				}
-				else if (clock.getElapsedTime().asMilliseconds() > 10) {
+				else if (mClock.getElapsedTime().asMilliseconds() > mDelayTime) {
 					std::string str;
-					PeekNamedPipe(pipout_r, buffer, sizeof(buffer), &read, &available, NULL);
+					PeekNamedPipe(mPipOut_r, mBuffer, sizeof(mBuffer), &mRead, &mAvailable, NULL);
 					do
 					{
-						ZeroMemory(buffer, sizeof(buffer));
-						if (!ReadFile(pipout_r, buffer, sizeof(buffer), &read, NULL) || !read) break;
-						buffer[read] = 0;
-						str += (char*)buffer;
-					} while (read >= sizeof(buffer));
+						ZeroMemory(mBuffer, sizeof(mBuffer));
+						if (!ReadFile(mPipOut_r, mBuffer, sizeof(mBuffer), &mRead, NULL) || !mRead) break;
+						mBuffer[mRead] = 0;
+						str += (char*)mBuffer;
+					} while (mRead >= sizeof(mBuffer));
 
 					int n = str.find("bestmove");
 					if (n != -1) {
@@ -73,57 +78,67 @@ namespace swe {
 						std::string position = "position fen " + mBoard.getCurBoardFEN() + (mColor == swe::Color::white ? " w" : " b") + "\n"
 							+ "go depth 5\n";
 
-						WriteFile(pipin_w, position.c_str(), position.length(), &writ, NULL);
-						clock.restart();
+						WriteFile(mPipIn_w, position.c_str(), position.length(), &mWrit, NULL);
+						mClock.restart();
 					}
 				}
 			}
 			return false;
 		}
 
+
+		// ----- virtuals override ---------------------------------------------------------------------------------
+
+		void closeEngine() override
+		{
+			WriteFile(mPipIn_w, "quit\n", 5, &mWrit, NULL);
+		}
+
+	private:
+		STARTUPINFO			mSti = { 0 };
+		SECURITY_ATTRIBUTES mStats = { 0 };
+		PROCESS_INFORMATION mPInfo = { 0 };
+		HANDLE				mPipIn_w, mPipIn_r, mPipOut_w, mPipOut_r;
+		BYTE				mBuffer[4096];
+		DWORD				mWrit, mRead, mAvailable;
+
+		sf::Clock			mClock;
+		int					mSkillLevel;
+		int					mDelayTime;
+
+
+		// ----- private methods ---------------------------------------------------------------------------------
+
 		void startEngine() {
-			pipin_w = pipin_r = pipout_w = pipout_r = NULL;
-			sats.nLength = sizeof(sats);
-			sats.bInheritHandle = TRUE;
-			sats.lpSecurityDescriptor = NULL;
+			mPipIn_w = mPipIn_r = mPipOut_w = mPipOut_r = NULL;
 
-			CreatePipe(&pipout_r, &pipout_w, &sats, 0);
-			CreatePipe(&pipin_r, &pipin_w, &sats, 0);
+			// set security attributes
+			mStats.nLength = sizeof(mStats);
+			mStats.bInheritHandle = TRUE;
+			mStats.lpSecurityDescriptor = NULL;
 
-			sti.dwFlags = STARTF_USESHOWWINDOW | STARTF_USESTDHANDLES;
-			sti.wShowWindow = SW_HIDE;
-			sti.hStdInput = pipin_r;
-			sti.hStdOutput = pipout_w;
-			sti.hStdError = pipout_w;
+			CreatePipe(&mPipOut_r, &mPipOut_w, &mStats, 0);
+			CreatePipe(&mPipIn_r, &mPipIn_w, &mStats, 0);
+
+			// set startup information for process creation
+			mSti.dwFlags = STARTF_USESHOWWINDOW | STARTF_USESTDHANDLES;
+			mSti.wShowWindow = SW_HIDE;
+			mSti.hStdInput = mPipIn_r;
+			mSti.hStdOutput = mPipOut_w;
+			mSti.hStdError = mPipOut_w;
 
 			DWORD mode = PIPE_READMODE_BYTE | PIPE_NOWAIT;
-			SetNamedPipeHandleState(pipout_r, &mode, NULL, NULL);
+			SetNamedPipeHandleState(mPipOut_r, &mode, NULL, NULL);
 
 			const char* narrowStr = "./StockfishEngine/stockfish-windows-x86-64-avx2.exe";
 			int requiredSize = MultiByteToWideChar(CP_UTF8, 0, narrowStr, -1, NULL, 0);
 			LPWSTR path = new wchar_t[requiredSize];
 			MultiByteToWideChar(CP_UTF8, 0, narrowStr, -1, path, requiredSize);
 
-			CreateProcess(NULL, path, NULL, NULL, TRUE, 0, NULL, NULL, &sti, &pi);
+			CreateProcess(NULL, path, NULL, NULL, TRUE, 0, NULL, NULL, &mSti, &mPInfo);
 
 			std::string skillLevelCmd = "setoption name Skill Level value " + std::to_string(mSkillLevel) + "\n";
-			WriteFile(pipin_w, skillLevelCmd.c_str(), skillLevelCmd.length(), &writ, NULL);
+			WriteFile(mPipIn_w, skillLevelCmd.c_str(), skillLevelCmd.length(), &mWrit, NULL);
 		}
-
-		void closeEngine() override
-		{
-			WriteFile(pipin_w, "quit\n", 5, &writ, NULL);
-		}
-
-	private:
-		STARTUPINFO sti = { 0 };
-		SECURITY_ATTRIBUTES sats = { 0 };
-		PROCESS_INFORMATION pi = { 0 };
-		HANDLE pipin_w, pipin_r, pipout_w, pipout_r;
-		BYTE buffer[4096];
-		DWORD writ, excode, read, available;
-		sf::Clock clock;
-
-		int mSkillLevel;
 	};
 }

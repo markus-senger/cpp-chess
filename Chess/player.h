@@ -9,31 +9,45 @@ namespace swe {
 		Player(swe::Color color, bool isAi, bool turn, swe::ChessBoard& board, bool preparation) : 
 			mColor{ color }, mIsAi{ isAi }, mTurn{ turn }, mBoard{ board }, mPreparation{ preparation } {}
 
+		// ----- pure virtuals ---------------------------------------------------------------------------------
+
 		virtual bool turn() = 0;
 
-		void setTurn(bool value) {
-			mTurn = value;
-		}
 
-		bool getTurn() {
-			return mTurn;
-		}
-
-		bool isAi() {
-			return mIsAi;
-		}
-
-		bool getPreparation() {
-			return mPreparation;
-		}
+		// ----- virtuals ---------------------------------------------------------------------------------
 
 		virtual void closeEngine() {}
 
+
+		// ----- methods ---------------------------------------------------------------------------------
+
+		bool isAi() const {
+			return mIsAi;
+		}
+
+
+		// ----- getter ---------------------------------------------------------------------------------
+
+		bool getTurn() const {
+			return mTurn;
+		}
+
+		bool getPreparation() const {
+			return mPreparation;
+		}
+
+
+		// ----- setter ---------------------------------------------------------------------------------
+
+		void setTurn(bool const value) {
+			mTurn = value;
+		}
+
 	protected:
+		swe::ChessBoard& mBoard;
 		swe::Color mColor;
 		bool mIsAi;
 		bool mTurn;
-		swe::ChessBoard& mBoard;
 		bool mPreparation;
 	};
 }

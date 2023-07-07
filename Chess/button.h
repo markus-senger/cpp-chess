@@ -27,21 +27,21 @@ namespace swe {
             mSpriteMouseOver.setPosition(position);
         }
 
-        void draw(sf::RenderWindow& window) {
+        void draw(sf::RenderWindow& window) const {
             if (isMouseOver(static_cast<sf::Vector2f>(sf::Mouse::getPosition(window))))
                 window.draw(mSpriteMouseOver);
             else
                 window.draw(mSprite);
         }
 
-        bool isMouseOver(const sf::Vector2f& mousePosition) const {
+        bool isMouseOver(sf::Vector2f const& mousePosition) const {
             return mSprite.getGlobalBounds().contains(mousePosition);
         }
 
     private:
-        sf::Texture mTexture;
-        sf::Sprite mSprite;
-        sf::Texture mTextureMouseOver;
-        sf::Sprite mSpriteMouseOver;
+        sf::Texture     mTexture;
+        sf::Sprite      mSprite;
+        sf::Texture     mTextureMouseOver;
+        sf::Sprite      mSpriteMouseOver;
     };
 }

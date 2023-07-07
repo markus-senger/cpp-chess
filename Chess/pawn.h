@@ -11,7 +11,9 @@ namespace swe {
 
         }
 
-        std::vector<std::pair<int, bool>> getPossibleSteps(std::array<std::shared_ptr<swe::ChessFigure>, CHESS_NUM_OF_FIELDS> const& board, bool withIsKingThreatened = true) override {
+        // ----- pure virtuals override ---------------------------------------------------------------------------------
+
+        std::vector<std::pair<int, bool>> getPossibleSteps(std::array<std::shared_ptr<swe::ChessFigure>, CHESS_NUM_OF_FIELDS> const& board, bool const withIsKingThreatened = true) const override {
             std::vector<std::pair<int, bool>> possibleMoves{};
 
             int direction = (mColor == Color::white) ? -1 : 1;
@@ -89,7 +91,10 @@ namespace swe {
             return possibleMoves;
         }
 
-        std::vector<int> getAttackSteps(std::array<std::shared_ptr<swe::ChessFigure>, CHESS_NUM_OF_FIELDS> const& board) override {
+
+        // ----- virtuals override ---------------------------------------------------------------------------------
+
+        std::vector<int> getAttackSteps(std::array<std::shared_ptr<swe::ChessFigure>, CHESS_NUM_OF_FIELDS> const& board) const override {
             std::vector<int> attackSteps;
 
             int direction = (mColor == Color::white) ? -1 : 1;

@@ -12,51 +12,58 @@ namespace swe {
 	class ChessBoard {
 	public:
 		ChessBoard(swe::ChessGame& chessGame);
-		void draw(sf::RenderWindow& window);
-		bool handleEvent(swe::Color currentColor);
-		void init(std::string const& fen = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR");
-		std::array<std::shared_ptr<swe::ChessFigure>, 64>& getBoardWithFigures();
-		void setEnd(bool value, swe::Color winColor);
-		swe::Graveyard& getGraveyard();
-		std::shared_ptr<swe::ChessFigure> getFigure(swe::Color color, swe::FigureIndex type, int row = -1, int col = -1);
-		void setPromotion(int row, int col);
-		bool getPromotion();
-		bool isActivePlayerAI();
-		bool handlePromotion(int idx = -1);
-		void setEnPassant(int col, int row);
-		int getEnPassantCol();
-		int getEnPassantRow();
-		void removeEnPassantFigure();
-		std::string getCurBoardFEN();
-		int getPosOfBoardWithString(std::string pos, bool getFigure);
-		void setLastMoveOrgIdx(int idx);
-		void setLastMoveNewIdx(int idx);
 
-		bool getRochadePossibleWhite();
-		bool getRochadePossibleBlack();
-		void setRochadePossibleWhite(bool value);
-		void setRochadePossibleBlack(bool value);
+		// methods
+		void init(std::string const& fen = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR");
+		void draw(sf::RenderWindow& window);
+		bool handleEvent(swe::Color const currentColor);
+		bool isActivePlayerAI() const;
+		bool handlePromotion(int const idx = -1);
+		void removeEnPassantFigure();
+
+
+		// getter
+		std::array<std::shared_ptr<swe::ChessFigure>, 64>&	getBoardWithFigures();
+		std::shared_ptr<swe::ChessFigure>					getFigure(swe::Color const color, swe::FigureIndex const type, int const row = -1, int const col = -1) const;
+		int													getPosOfBoardWithString(std::string pos, bool const getFigure) const;
+		swe::Graveyard&										getGraveyard();
+		std::string											getCurBoardFEN() const;
+		int													getEnPassantRow() const;
+		int													getEnPassantCol() const;
+		bool												getPromotion() const;
+		bool												getRochadePossibleWhite() const;
+		bool												getRochadePossibleBlack() const;
+
+
+		// setter
+		void setEnd(bool const value, swe::Color const winColor);
+		void setRochadePossibleWhite(bool const value);
+		void setRochadePossibleBlack(bool const value);
+		void setPromotion(int const row, int const col);
+		void setEnPassant(int const col, int const row);
+		void setLastMoveOrgIdx(int const idx);
+		void setLastMoveNewIdx(int const idx);
 
 	private:
-		swe::ChessGame& mChessGame;
-		swe::Graveyard mGraveyard;
-		std::array<std::shared_ptr<swe::ChessFigure>, CHESS_NUM_OF_FIELDS> mBoardWithFigures{};
-		std::shared_ptr<ChessFigure> mSelectedFigure{};
-		bool mPromotion;
-		int mPromotionRow;
-		int mPromotionCol;
-		int mEnPassantCol;
-		int mEnPassantRow;
+		swe::ChessGame&														mChessGame;
+		swe::Graveyard														mGraveyard;
+		std::array<std::shared_ptr<swe::ChessFigure>, CHESS_NUM_OF_FIELDS>	mBoardWithFigures{};
+		std::shared_ptr<ChessFigure>										mSelectedFigure{};
 
-		bool mShowLastMove;
-		int mLastMoveOrgIdx;
-		int mLastMoveNewIdx;
+		bool	mPromotion;
+		int		mPromotionRow;
+		int		mPromotionCol;
+		int		mEnPassantRow;
+		int		mEnPassantCol;
+		bool	mShowLastMove;
+		int		mLastMoveOrgIdx;
+		int		mLastMoveNewIdx;
+		bool	mRochadePossibleWhite;
+		bool	mRochadePossibleBlack;
 
-		bool mRochadePossibleWhite;
-		bool mRochadePossibleBlack;
-
-		void drawPromotionBoard(sf::RenderWindow& window);
-		void replaceFigure(int idx, std::shared_ptr<ChessFigure> newFigure);
-		int mouseOverPromotionBoardField();
+		// private methods
+		void	drawPromotionBoard(sf::RenderWindow& window) const;
+		void	replaceFigure(int const idx, std::shared_ptr<ChessFigure> const newFigure);
+		int		mouseOverPromotionBoardField() const;
 	};
 }

@@ -9,6 +9,9 @@ namespace swe {
 	public:
 		PlayerAIRandom(swe::Color color, bool turn, swe::ChessBoard& board) : Player(color, true, turn, board, false) {}
 
+
+		// ----- pure virtuals override ---------------------------------------------------------------------------------
+
 		bool turn() override {
 			if (mTurn) {
 				std::vector<std::shared_ptr<swe::ChessFigure>> nonNullEntries;

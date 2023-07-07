@@ -2,5 +2,5 @@
 #include "chessGame.h"
 
 int main() {
-	swe::ChessGame();
+	swe::ChessGame game = swe::ChessGame();
 }

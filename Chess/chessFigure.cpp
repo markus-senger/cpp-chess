@@ -15,6 +15,43 @@ namespace swe {
 
 	}
 
+	// ----- virtuals ---------------------------------------------------------------------------------
+
+	void ChessFigure::draw(sf::RenderWindow& window, sf::Vector2f const pos) {
+		if (mSelected) {
+			sf::Sprite& spriteSelectedField = mSpriteHandler.getSelectedFieldSprite();
+			spriteSelectedField.setPosition(sf::Vector2f(pos.x + MOVE_SYMBOL_SELECTED_FIELD_OFFSET_PX, pos.y + MOVE_SYMBOL_SELECTED_FIELD_OFFSET_PX));
+			window.draw(spriteSelectedField);
+			showPossibleSteps(window);
+
+			mFigureSprite.setPosition(sf::Vector2f(sf::Mouse::getPosition(window).x - mFigureSprite.getGlobalBounds().width / 2, sf::Mouse::getPosition(window).y - mFigureSprite.getGlobalBounds().height / 2));
+		}
+		else
+			mFigureSprite.setPosition(pos);
+		window.draw(mFigureSprite);
+	}
+
+	std::vector<int> ChessFigure::getAttackSteps(std::array<std::shared_ptr<swe::ChessFigure>, CHESS_NUM_OF_FIELDS> const& board) const {
+		std::vector<int> attackSteps;
+
+		for (const auto& entry : getPossibleSteps(board, false)) {
+			attackSteps.push_back(entry.first);
+		}
+
+		return attackSteps;
+	}
+
+	bool ChessFigure::isKingThreatened(int const orgRow, int const orgCol, int const row, int const col) const {
+		throw std::logic_error("function not implemented");
+	}
+
+	void ChessFigure::setCheck(bool const value) {
+		throw std::logic_error("function not implemented");
+	}
+
+
+	// ----- public methods ---------------------------------------------------------------------------------
+
 	void ChessFigure::initPossibleSteps() {
 		mCurPossibleSteps = getPossibleSteps(mChessBoard.getBoardWithFigures());
 	}
@@ -35,21 +72,7 @@ namespace swe {
 		}
 	}
 
-	std::vector<int> ChessFigure::getAttackSteps(std::array<std::shared_ptr<swe::ChessFigure>, CHESS_NUM_OF_FIELDS> const& board) {
-		std::vector<int> attackSteps;
-
-		for (const auto& entry : getPossibleSteps(board, false)) {
-			attackSteps.push_back(entry.first);
-		}
-
-		return attackSteps;
-	}
-
-	bool ChessFigure::isKingThreatened(int orgRow, int orgCol, int row, int col) {
-		throw std::logic_error("function not implemented");
-	}
-
-	bool ChessFigure::move(int row, int col, bool force, char promotion, bool lastMove) {
+	bool ChessFigure::move(int const row, int const col, bool const force, char const promotion, bool const lastMove) {
 		int move = convTo1D(row, col);
 		auto it = std::find_if(mCurPossibleSteps.begin(), mCurPossibleSteps.end(), [move](const std::pair<int, bool>& entry) {
 			return entry.first == move;
@@ -101,44 +124,11 @@ namespace swe {
 		return false;
 	}
 
-	void ChessFigure::checkSpecialRules(int row, int col, bool isAttack) {
-		// rochade
-		if (getType() == swe::FigureIndex::king && std::abs(mCol - col) == 2) {
-			if (col == 2) { // long rochade
-				auto rook = mChessBoard.getFigure(mColor, swe::FigureIndex::rook, -1, 0);
-				rook->move(rook->getRow(), 3, true, ' ', false);
-			}
-			else if (col == 6) { // short rochade
-				auto rook = mChessBoard.getFigure(mColor, swe::FigureIndex::rook, -1, CHESS_SIZE - 1);
-				rook->move(rook->getRow(), 5, true, ' ', false);
-			}
-		}
-
-		// pawn promotion
-		if (getType() == swe::FigureIndex::pawn) {
-			if ((mColor == swe::Color::white && row == 0) || (mColor == swe::Color::black && row == CHESS_SIZE - 1)) {
-				mChessBoard.setPromotion(row, col);
-			}
-		}
-
-		// en passant
-		if (isAttack && mChessBoard.getBoardWithFigures()[convTo1D(row, col)] == nullptr) {
-			mChessBoard.getGraveyard().add(mChessBoard.getBoardWithFigures()[convTo1D(mChessBoard.getEnPassantRow(), mChessBoard.getEnPassantCol())], 
-				mChessBoard.getBoardWithFigures()[convTo1D(mChessBoard.getEnPassantRow(), mChessBoard.getEnPassantCol())]->getColor());
-			mChessBoard.removeEnPassantFigure();
-		}
-
-		if (mType == swe::FigureIndex::pawn && mFirstMove && ((mColor == swe::Color::white && row == ENPASSANT_ROW_WHITE)
-			|| (mColor == swe::Color::black && row == ENPASSANT_ROW_BLACK))) {
-
-			mChessBoard.setEnPassant(col, row);
-		}
-		else {
-			mChessBoard.setEnPassant(-1, -1);
-		}
+	void ChessFigure::scale(sf::Vector2f const scaleFactor) {
+		mFigureSprite.scale(scaleFactor);
 	}
 
-	bool ChessFigure::checkEnd(swe::Color color) {
+	bool ChessFigure::checkEnd(swe::Color const color) const {
 		auto king = mChessBoard.getFigure(color, swe::FigureIndex::king);
 		bool tooLessMaterial = false;
 
@@ -203,61 +193,85 @@ namespace swe {
 		return tooLessMaterial;
 	}
 
-	void ChessFigure::draw(sf::RenderWindow& window, sf::Vector2f pos) {
-		if (mSelected) {
-			sf::Sprite& spriteSelectedField = mSpriteHandler.getSelectedFieldSprite();
-			spriteSelectedField.setPosition(sf::Vector2f(pos.x + MOVE_SYMBOL_SELECTED_FIELD_OFFSET_PX, pos.y + MOVE_SYMBOL_SELECTED_FIELD_OFFSET_PX));
-			window.draw(spriteSelectedField);
-			showPossibleSteps(window);
 
-			mFigureSprite.setPosition(sf::Vector2f(sf::Mouse::getPosition(window).x - mFigureSprite.getGlobalBounds().width / 2, sf::Mouse::getPosition(window).y - mFigureSprite.getGlobalBounds().height / 2));
-		}
-		else
-			mFigureSprite.setPosition(pos);
-		window.draw(mFigureSprite);
-	}
+	// ----- getter ---------------------------------------------------------------------------------
 
-	void ChessFigure::scale(sf::Vector2f scaleFactor) {
-		mFigureSprite.scale(scaleFactor);
-	}
-
-	void ChessFigure::setSelected(bool value) {
-		mSelected = value;
-	}
-
-	void ChessFigure::setCheck(bool value) {
-		throw std::logic_error("function not implemented");
-	}
-
-	bool ChessFigure::getSelected() {
+	bool ChessFigure::getSelected() const {
 		return mSelected;
 	}
 
-	swe::FigureIndex ChessFigure::getType() {
+	swe::FigureIndex ChessFigure::getType() const {
 		return mType;
 	}
 
-	swe::Color ChessFigure::getColor() {
+	swe::Color ChessFigure::getColor() const {
 		return mColor;
 	}
 
-	bool ChessFigure::getFirstMove() {
+	bool ChessFigure::getFirstMove() const {
 		return mFirstMove;
 	}
 
-	void ChessFigure::setFirstMove(bool value) {
-		mFirstMove = value;
-	}
-
-	float ChessFigure::getHeight() {
+	float ChessFigure::getHeight() const {
 		return mFigureSprite.getLocalBounds().height;
 	}
 
-	int ChessFigure::getRow() {
+	int ChessFigure::getRow() const {
 		return mRow;
 	}
 
-	int ChessFigure::getCol() {
+	int ChessFigure::getCol() const {
 		return mCol;
+	}
+
+
+	// ----- setters ---------------------------------------------------------------------------------
+
+	void ChessFigure::setFirstMove(bool const value) {
+		mFirstMove = value;
+	}
+
+	void ChessFigure::setSelected(bool const value) {
+		mSelected = value;
+	}
+
+
+	// ----- protected methods ---------------------------------------------------------------------------------
+
+	void ChessFigure::checkSpecialRules(int const row, int const col, bool const isAttack) {
+		// rochade
+		if (getType() == swe::FigureIndex::king && std::abs(mCol - col) == 2) {
+			if (col == 2) { // long rochade
+				auto rook = mChessBoard.getFigure(mColor, swe::FigureIndex::rook, -1, 0);
+				rook->move(rook->getRow(), 3, true, ' ', false);
+			}
+			else if (col == 6) { // short rochade
+				auto rook = mChessBoard.getFigure(mColor, swe::FigureIndex::rook, -1, CHESS_SIZE - 1);
+				rook->move(rook->getRow(), 5, true, ' ', false);
+			}
+		}
+
+		// pawn promotion
+		if (getType() == swe::FigureIndex::pawn) {
+			if ((mColor == swe::Color::white && row == 0) || (mColor == swe::Color::black && row == CHESS_SIZE - 1)) {
+				mChessBoard.setPromotion(row, col);
+			}
+		}
+
+		// en passant
+		if (isAttack && mChessBoard.getBoardWithFigures()[convTo1D(row, col)] == nullptr) {
+			mChessBoard.getGraveyard().add(mChessBoard.getBoardWithFigures()[convTo1D(mChessBoard.getEnPassantRow(), mChessBoard.getEnPassantCol())],
+				mChessBoard.getBoardWithFigures()[convTo1D(mChessBoard.getEnPassantRow(), mChessBoard.getEnPassantCol())]->getColor());
+			mChessBoard.removeEnPassantFigure();
+		}
+
+		if (mType == swe::FigureIndex::pawn && mFirstMove && ((mColor == swe::Color::white && row == ENPASSANT_ROW_WHITE)
+			|| (mColor == swe::Color::black && row == ENPASSANT_ROW_BLACK))) {
+
+			mChessBoard.setEnPassant(col, row);
+		}
+		else {
+			mChessBoard.setEnPassant(-1, -1);
+		}
 	}
 }

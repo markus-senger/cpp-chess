@@ -1,29 +1,38 @@
 #include "chessGame.h"
 #include "chessBoard.h"
+#include "utils.h"
 
 #include <chrono>
 #include <thread>
 
 namespace swe {
 	ChessGame::ChessGame()
-		: mStarted{ false }, mWinColor{ swe::Color::none }, mEnd{ false },
-		mWitdh{ WINDOW_DEFAULT_WIDTH_PX },
-		mHeight{ WINDOW_DEFAULT_HEIGHT_PX },
-		mButtonPlayFriend{ sf::Vector2f(mWitdh / 2, mHeight / 2 + BUTTON_MENU_FIRST_ROW_OFFSET_FROM_CENTER_PX), 
+		: mWitdh{ WINDOW_DEFAULT_WIDTH_PX }, mHeight{ WINDOW_DEFAULT_HEIGHT_PX },
+		mStarted{ false }, mEnd{ false }, mAiVsAi{ false }, mWinColor{ swe::Color::none },
+		mButtonPlayFriend{ sf::Vector2f(WINDOW_DEFAULT_WIDTH_PX / 2, WINDOW_DEFAULT_HEIGHT_PX / 2 + BUTTON_MENU_FIRST_ROW_OFFSET_FROM_CENTER_PX),
 											"Images/button_play-with-a-friend.png", "Images/button_hover_play-with-a-friend.png" },
-		mButtonPlayAI(sf::Vector2f(mWitdh / 2, mHeight / 2 + BUTTON_MENU_SECOND_ROW_OFFSET_FROM_CENTER_PX), 
+		mButtonPlayAI(sf::Vector2f(WINDOW_DEFAULT_WIDTH_PX / 2, WINDOW_DEFAULT_HEIGHT_PX / 2 + BUTTON_MENU_SECOND_ROW_OFFSET_FROM_CENTER_PX),
 											"Images/button_play-with-the-ai.png", "Images/button_hover_play-with-the-ai.png"),
-		mButtonPlayAIvsAI(sf::Vector2f(mWitdh / 2, mHeight / 2 + BUTTON_MENU_THIRD_ROW_OFFSET_FROM_CENTER_PX),
+		mButtonPlayAIvsAI(sf::Vector2f(WINDOW_DEFAULT_WIDTH_PX / 2, WINDOW_DEFAULT_HEIGHT_PX / 2 + BUTTON_MENU_THIRD_ROW_OFFSET_FROM_CENTER_PX),
 											"Images/button_play-ai-vs-ai.png", "Images/button_hover_play-ai-vs-ai.png"),
 		mButtonBack{ swe::Button(BACK_BUTTON_POSITION_V, "Images/button_back.png", "Images/button_hover_back.png") },
 		mButtonBackToMenu{ swe::Button("Images/button_backToMenu.png", "Images/button_hover_backToMenu.png") },
-		mBoard{ *this },
-		mAiVsAi{ false },
-		mSpriteHandler{} {
+		mBoard{ *this } {
 
 		loadFonts();
 		createWindow();
 	}
+
+	// ----- public methods ---------------------------------------------------------------------------------
+
+	bool ChessGame::isActivePlayerAI() const {
+		if (mPlayer1->getTurn())
+			return mPlayer1->isAi();
+		return mPlayer2->isAi();
+	}
+
+
+	// ----- getter ---------------------------------------------------------------------------------
 
 	sf::RenderWindow& ChessGame::getWindow() {
 		return mWindow;
@@ -33,20 +42,20 @@ namespace swe {
 		return mSpriteHandler;
 	}
 
-	void ChessGame::setStarted(bool value) {
+
+	// ----- setter ---------------------------------------------------------------------------------
+
+	void ChessGame::setStarted(bool const value) {
 		mStarted = value;
 	}
 
-	void ChessGame::setEnd(bool value, swe::Color winColor) {
+	void ChessGame::setEnd(bool const value, swe::Color const winColor) {
 		mEnd = value;
 		mWinColor = winColor;
 	}
 
-	bool ChessGame::isActivePlayerAI() {
-		if (mPlayer1->getTurn())
-			return mPlayer1->isAi();
-		return mPlayer2->isAi();
-	}
+	
+	// ----- private methods ---------------------------------------------------------------------------------
 
 	void ChessGame::createWindow() {
 		mWindow.create(sf::VideoMode(mWitdh, mHeight), "Chess", sf::Style::Titlebar | sf::Style::Close);
@@ -57,73 +66,78 @@ namespace swe {
 
 		while (mWindow.isOpen())
 		{
-			sf::Event evt;
-			while (mWindow.pollEvent(evt)) {
-				if (evt.type == evt.Closed) {
-					if (mPlayer1 != nullptr) mPlayer1->closeEngine();
-					if (mPlayer2 != nullptr) mPlayer2->closeEngine();
-					mWindow.close();
-				}
-
-				if (evt.type == sf::Event::MouseButtonPressed || (mPlayer1 != nullptr && mPlayer1->getTurn() && mPlayer1->getPreparation()) || 
-					(mPlayer2 != nullptr && mPlayer2->getTurn() && mPlayer2->getPreparation())) {
-
-					if (mEnd) {
-						if (mButtonBack.isMouseOver(static_cast<sf::Vector2f>(sf::Mouse::getPosition(mWindow))) ||
-							mButtonBackToMenu.isMouseOver(static_cast<sf::Vector2f>(sf::Mouse::getPosition(mWindow)))) {
-							mStarted = false;
-							mEnd = false;
-						}
-					}
-					else if (evt.key.code == sf::Mouse::Left && !mStarted) {
-						mBoard.init();
-						if (mPlayer1 != nullptr) mPlayer1->closeEngine();
-						if (mPlayer2 != nullptr) mPlayer2->closeEngine();
-						if (mButtonPlayFriend.isMouseOver(static_cast<sf::Vector2f>(sf::Mouse::getPosition(mWindow)))) {
-							mStarted = true;
-							mPlayer1 = std::make_unique<PlayerHuman>(swe::Color::white, true, mBoard);
-							mPlayer2 = std::make_unique<PlayerHuman>(swe::Color::black, false, mBoard);
-						}
-						else if (mButtonPlayAI.isMouseOver(static_cast<sf::Vector2f>(sf::Mouse::getPosition(mWindow)))) {
-							mStarted = true;
-							mPlayer1 = std::make_unique<PlayerHuman>(swe::Color::white, true, mBoard);
-							mPlayer2 = std::make_unique<PlayerAIStockfish>(swe::Color::black, false, mBoard);
-						}
-						else if (mButtonPlayAIvsAI.isMouseOver(static_cast<sf::Vector2f>(sf::Mouse::getPosition(mWindow)))) {
-							mStarted = true;
-							mAiVsAi = true;
-							mPlayer1 = std::make_unique<PlayerAIStockfish>(swe::Color::white, true, mBoard);
-							mPlayer2 = std::make_unique<PlayerAIStockfish>(swe::Color::black, false, mBoard);
-						}
-					}
-					else if (mStarted && (evt.key.code == sf::Mouse::Left || (mPlayer1->getTurn() && mPlayer1->getPreparation()) || (mPlayer2->getTurn() && mPlayer2->getPreparation()))) {
-						if (mButtonBack.isMouseOver(static_cast<sf::Vector2f>(sf::Mouse::getPosition(mWindow)))) {
-							mStarted = false;
-							mAiVsAi = false;
-						}
-
-						bool nextPlayerWithoutDelay = true;
-						if (mPlayer1->turn()) {
-							mPlayer2->setTurn(mEnd ? false : true);
-							mPlayer1->setTurn(false);
-							if (mAiVsAi)
-								nextPlayerWithoutDelay = false;
-						}
-
-						mWindow.clear(sf::Color::White);
-						draw();
-						mWindow.display();
-						if (nextPlayerWithoutDelay && mPlayer2->turn()) {
-							mPlayer1->setTurn(mEnd ? false : true);
-							mPlayer2->setTurn(false);
-						}
-					}
-				}
-			}
+			
+			eventLoop();
 
 			mWindow.clear(sf::Color::White);
 			draw();
 			mWindow.display();
+		}
+	}
+
+	void ChessGame::eventLoop() {
+		sf::Event evt;
+		while (mWindow.pollEvent(evt)) {
+			if (evt.type == evt.Closed) {
+				if (mPlayer1 != nullptr) mPlayer1->closeEngine();
+				if (mPlayer2 != nullptr) mPlayer2->closeEngine();
+				mWindow.close();
+			}
+
+			if (evt.type == sf::Event::MouseButtonPressed || (mPlayer1 != nullptr && mPlayer1->getTurn() && mPlayer1->getPreparation()) ||
+				(mPlayer2 != nullptr && mPlayer2->getTurn() && mPlayer2->getPreparation())) {
+
+				if (mEnd) {
+					if (mButtonBack.isMouseOver(static_cast<sf::Vector2f>(sf::Mouse::getPosition(mWindow))) ||
+						mButtonBackToMenu.isMouseOver(static_cast<sf::Vector2f>(sf::Mouse::getPosition(mWindow)))) {
+						mStarted = false;
+						mEnd = false;
+					}
+				}
+				else if (evt.key.code == sf::Mouse::Left && !mStarted) {
+					mBoard.init();
+					if (mPlayer1 != nullptr) mPlayer1->closeEngine();
+					if (mPlayer2 != nullptr) mPlayer2->closeEngine();
+					if (mButtonPlayFriend.isMouseOver(static_cast<sf::Vector2f>(sf::Mouse::getPosition(mWindow)))) {
+						mStarted = true;
+						mPlayer1 = std::make_unique<PlayerHuman>(swe::Color::white, true, mBoard);
+						mPlayer2 = std::make_unique<PlayerHuman>(swe::Color::black, false, mBoard);
+					}
+					else if (mButtonPlayAI.isMouseOver(static_cast<sf::Vector2f>(sf::Mouse::getPosition(mWindow)))) {
+						mStarted = true;
+						mPlayer1 = std::make_unique<PlayerHuman>(swe::Color::white, true, mBoard);
+						mPlayer2 = std::make_unique<PlayerAIStockfish>(swe::Color::black, false, mBoard);
+					}
+					else if (mButtonPlayAIvsAI.isMouseOver(static_cast<sf::Vector2f>(sf::Mouse::getPosition(mWindow)))) {
+						mStarted = true;
+						mAiVsAi = true;
+						mPlayer1 = std::make_unique<PlayerAIStockfish>(swe::Color::white, true, mBoard, 100);
+						mPlayer2 = std::make_unique<PlayerAIStockfish>(swe::Color::black, false, mBoard, 100);
+					}
+				}
+				else if (mStarted && (evt.key.code == sf::Mouse::Left || (mPlayer1->getTurn() && mPlayer1->getPreparation()) || (mPlayer2->getTurn() && mPlayer2->getPreparation()))) {
+					if (mButtonBack.isMouseOver(static_cast<sf::Vector2f>(sf::Mouse::getPosition(mWindow)))) {
+						mStarted = false;
+						mAiVsAi = false;
+					}
+
+					bool nextPlayerWithoutDelay = true;
+					if (mPlayer1->turn()) {
+						mPlayer2->setTurn(mEnd ? false : true);
+						mPlayer1->setTurn(false);
+						if (mAiVsAi)
+							nextPlayerWithoutDelay = false;
+					}
+
+					mWindow.clear(sf::Color::White);
+					draw();
+					mWindow.display();
+					if (nextPlayerWithoutDelay && mPlayer2->turn()) {
+						mPlayer1->setTurn(mEnd ? false : true);
+						mPlayer2->setTurn(false);
+					}
+				}
+			}
 		}
 	}
 

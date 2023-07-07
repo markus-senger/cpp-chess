@@ -10,7 +10,10 @@
 namespace swe {
 	class Graveyard {
 	public:
-		void draw(sf::RenderWindow& window, int boardWidth, int boardHeight) {
+
+		// ----- methods ---------------------------------------------------------------------------------
+
+		void draw(sf::RenderWindow& window, int const boardWidth, int const boardHeight) const {
 			int i = 0;
 			for(auto figure : mWhiteFigures) {
 				figure->draw(window, sf::Vector2f(boardWidth - GRAVEYARD_BOARD_WIDTH_OFFSET_WHITE_PX,
@@ -26,7 +29,7 @@ namespace swe {
 			}
 		}
 
-		void add(std::shared_ptr<swe::ChessFigure> chessFigure, swe::Color color) {
+		void add(std::shared_ptr<swe::ChessFigure> chessFigure, swe::Color const color) {
 			chessFigure->scale(sf::Vector2f(GRAVEYARD_SCALEFAKTOR, GRAVEYARD_SCALEFAKTOR));
 			if (color == swe::Color::black) mBlackFigures.push_back(chessFigure);
 			else if (color == swe::Color::white) mWhiteFigures.push_back(chessFigure);

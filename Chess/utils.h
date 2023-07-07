@@ -62,19 +62,19 @@ namespace swe {
 	const int			GRAVEYARD_FIGURE_HEIGHT_OFFSET_PX				= 35;
 
 	// generally
-	static int convTo1D(int row, int col) {
+	static int convTo1D(int const row, int const col) {
 		return (row * CHESS_SIZE) + col;
 	}
 
-	static int calcRowFromIdx(int idx) {
+	static int calcRowFromIdx(int const idx) {
 		return idx / CHESS_SIZE;
 	}
 
-	static int calcColFromIdx(int idx) {
+	static int calcColFromIdx(int const idx) {
 		return idx % CHESS_SIZE;
 	}
 
-	static bool mouseOverFieldAccordingToIdx(sf::Vector2i mousePos, int idx) {
+	static bool mouseOverFieldAccordingToIdx(sf::Vector2i const mousePos, int const idx) {
 		return	mousePos.x > (calcColFromIdx(idx)) * CHESS_FIELD_SIZE_PX + CHESS_BOARD_WITDH_OFFSET_PX && 
 			mousePos.x < (calcColFromIdx(idx)) * CHESS_FIELD_SIZE_PX + CHESS_BOARD_WITDH_OFFSET_PX + CHESS_FIELD_SIZE_PX &&
 			mousePos.y > (calcRowFromIdx(idx)) * CHESS_FIELD_SIZE_PX + CHESS_BOARD_HEIGHT_OFFSET_PX &&

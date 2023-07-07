@@ -7,20 +7,14 @@ namespace swe {
     class King : public ChessFigure {
     public:
         King(swe::ChessBoard& chessBoard, swe::SpriteHandler& spriteHandler, sf::Sprite figureSprite, bool essential, swe::Color color, int row, int col)
-            : ChessFigure{ chessBoard, spriteHandler, figureSprite, essential, swe::FigureIndex::king, color, row, col } {
+            : mCheck{ false },
+            ChessFigure { chessBoard, spriteHandler, figureSprite, essential, swe::FigureIndex::king, color, row, col } {
 
         }
 
-        void draw(sf::RenderWindow& window, sf::Vector2f pos) override {
-            if (mCheck) {
-                sf::Sprite& s = mSpriteHandler.getCheckFieldSprite();
-                s.setPosition(sf::Vector2f(mCol * CHESS_FIELD_SIZE_PX + CHESS_BOARD_WITDH_OFFSET_PX + MOVE_SYMBOL_ATTACK_FIELD_OFFSET_PX, mRow * CHESS_FIELD_SIZE_PX + CHESS_BOARD_HEIGHT_OFFSET_PX + MOVE_SYMBOL_ATTACK_FIELD_OFFSET_PX));
-                window.draw(s);
-            }
-            ChessFigure::draw(window, pos);
-        }
+        // ----- pure virtuals override ---------------------------------------------------------------------------------
 
-        std::vector<std::pair<int, bool>> getPossibleSteps(std::array<std::shared_ptr<swe::ChessFigure>, CHESS_NUM_OF_FIELDS> const& board, bool withIsKingThreatened = true) override {
+        std::vector<std::pair<int, bool>> getPossibleSteps(std::array<std::shared_ptr<swe::ChessFigure>, CHESS_NUM_OF_FIELDS> const& board, bool const withIsKingThreatened = true) const override {
             std::vector<std::pair<int, bool>> possibleMoves{};
 
             int dx[NUM_POSSIBLE_MOVES_KING] = { 1, 1, 1, 0, 0, -1, -1, -1 };
@@ -44,7 +38,7 @@ namespace swe {
 
             // rochade
             if (mFirstMove && !mCheck && withIsKingThreatened) {
-                if(mColor == swe::Color::black)
+                if (mColor == swe::Color::black)
                     mChessBoard.setRochadePossibleBlack(true);
                 else if (mColor == swe::Color::white)
                     mChessBoard.setRochadePossibleWhite(true);
@@ -70,7 +64,7 @@ namespace swe {
                     }
                 }
             }
-            else if(!mFirstMove || mCheck) {
+            else if (!mFirstMove || mCheck) {
                 if (mColor == swe::Color::black)
                     mChessBoard.setRochadePossibleBlack(false);
                 else if (mColor == swe::Color::white)
@@ -80,7 +74,19 @@ namespace swe {
             return possibleMoves;
         }
 
-        bool isKingThreatened(int orgRow, int orgCol, int row, int col) override {
+
+        // ----- virtuals override ---------------------------------------------------------------------------------
+        
+        void draw(sf::RenderWindow& window, sf::Vector2f const pos) override {
+            if (mCheck) {
+                sf::Sprite& s = mSpriteHandler.getCheckFieldSprite();
+                s.setPosition(sf::Vector2f(mCol * CHESS_FIELD_SIZE_PX + CHESS_BOARD_WITDH_OFFSET_PX + MOVE_SYMBOL_ATTACK_FIELD_OFFSET_PX, mRow * CHESS_FIELD_SIZE_PX + CHESS_BOARD_HEIGHT_OFFSET_PX + MOVE_SYMBOL_ATTACK_FIELD_OFFSET_PX));
+                window.draw(s);
+            }
+            ChessFigure::draw(window, pos);
+        }
+
+        bool isKingThreatened(int const orgRow, int const orgCol, int const row, int const col) const override {
             auto board = mChessBoard.getBoardWithFigures();
             int curKingRow = mRow;
             int curKingCol = mCol;
@@ -110,7 +116,7 @@ namespace swe {
             return false;  
         }
 
-        void setCheck(bool value) {
+        void setCheck(bool const value) {
             mCheck = value;
         }
 

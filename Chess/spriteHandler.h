@@ -11,6 +11,9 @@ namespace swe {
 			createSprites();
 		}
 
+
+		// ----- getter ---------------------------------------------------------------------------------
+
 		sf::Sprite& getBoardSprite() {
 			return mSBoard;
 		}
@@ -117,6 +120,8 @@ namespace swe {
 		sf::Texture mTLastMoveSymbol;
 		sf::Sprite mSLastMoveSymbol;
 
+
+		// ----- private methods ---------------------------------------------------------------------------------
 
 		void createSprites() {
 			mTFigures.loadFromFile("Images/figures.png");
