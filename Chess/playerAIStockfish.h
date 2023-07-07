@@ -24,17 +24,19 @@ namespace swe {
 				if (!mPreparation) {
 					std::random_device rd;
 					std::mt19937 rng(rd());
-					std::uniform_int_distribution<size_t> dist(5, 15);
+					std::uniform_int_distribution<size_t> dist(8, 12);
 					size_t randomDepth = dist(rng);
 
-					std::string position = "position fen " + mBoard.getCurBoardFEN() + (mColor == swe::Color::white ? " w KQ" : " b kq") + "\n"
+					std::string position;
+					position = "position fen " + mBoard.getCurBoardFEN() + (mColor == swe::Color::white ? " w" : " b") 
+						+ (mBoard.getRochadePossibleWhite() ? " KQ" : "") + (mBoard.getRochadePossibleBlack() ? " kq" : "") + "\n"
 						+ "go depth " + std::to_string(randomDepth) + "\n";
 
 					WriteFile(pipin_w, position.c_str(), position.length(), &writ, NULL);
 					mPreparation = true;
 					clock.restart();
 				}
-				else if (clock.getElapsedTime().asMilliseconds() > 50) {
+				else if (clock.getElapsedTime().asMilliseconds() > 10) {
 					std::string str;
 					PeekNamedPipe(pipout_r, buffer, sizeof(buffer), &read, &available, NULL);
 					do
@@ -60,10 +62,19 @@ namespace swe {
 						auto figure = mBoard.getBoardWithFigures()[mBoard.getPosOfBoardWithString(str, true)];
 						figure->initPossibleSteps();
 						figure->move(calcRowFromIdx(mBoard.getPosOfBoardWithString(str, false)),
-							calcColFromIdx(mBoard.getPosOfBoardWithString(str, false)), false, promotion);
+							calcColFromIdx(mBoard.getPosOfBoardWithString(str, false)), true, promotion);
 
 						mPreparation = false;
 						return true;
+					}
+					else if (str == "") {
+						closeEngine();
+						startEngine();
+						std::string position = "position fen " + mBoard.getCurBoardFEN() + (mColor == swe::Color::white ? " w" : " b") + "\n"
+							+ "go depth 5\n";
+
+						WriteFile(pipin_w, position.c_str(), position.length(), &writ, NULL);
+						clock.restart();
 					}
 				}
 			}
@@ -88,7 +99,7 @@ namespace swe {
 			DWORD mode = PIPE_READMODE_BYTE | PIPE_NOWAIT;
 			SetNamedPipeHandleState(pipout_r, &mode, NULL, NULL);
 
-			const char* narrowStr = "./StockfishEngine/stockfish-windows-x86-64-modern.exe";
+			const char* narrowStr = "./StockfishEngine/stockfish-windows-x86-64-avx2.exe";
 			int requiredSize = MultiByteToWideChar(CP_UTF8, 0, narrowStr, -1, NULL, 0);
 			LPWSTR path = new wchar_t[requiredSize];
 			MultiByteToWideChar(CP_UTF8, 0, narrowStr, -1, path, requiredSize);

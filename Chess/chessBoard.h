@@ -32,6 +32,11 @@ namespace swe {
 		void setLastMoveOrgIdx(int idx);
 		void setLastMoveNewIdx(int idx);
 
+		bool getRochadePossibleWhite();
+		bool getRochadePossibleBlack();
+		void setRochadePossibleWhite(bool value);
+		void setRochadePossibleBlack(bool value);
+
 	private:
 		swe::ChessGame& mChessGame;
 		swe::Graveyard mGraveyard;
@@ -46,6 +51,9 @@ namespace swe {
 		bool mShowLastMove;
 		int mLastMoveOrgIdx;
 		int mLastMoveNewIdx;
+
+		bool mRochadePossibleWhite;
+		bool mRochadePossibleBlack;
 
 		void drawPromotionBoard(sf::RenderWindow& window);
 		void replaceFigure(int idx, std::shared_ptr<ChessFigure> newFigure);

@@ -14,8 +14,7 @@
 
 namespace swe {
 	ChessBoard::ChessBoard(swe::ChessGame& chessGame)
-        : mChessGame{ chessGame }, mPromotion{ false }, mShowLastMove{ false }{
-
+        : mChessGame{ chessGame }, mPromotion{ false }, mShowLastMove{ false }, mRochadePossibleBlack{ true }, mRochadePossibleWhite{ true }{
 		mChessGame.getSpriteHandler().getBoardSprite().setPosition(sf::Vector2f(0, CHESS_BOARD_HEADER_SIZE_PX));
 	}
 
@@ -414,5 +413,21 @@ namespace swe {
     void ChessBoard::setLastMoveNewIdx(int idx) {
         mShowLastMove = true;
         mLastMoveNewIdx = idx;
+    }
+
+    bool ChessBoard::getRochadePossibleWhite() {
+        return mRochadePossibleWhite;
+    }
+
+    bool ChessBoard::getRochadePossibleBlack() {
+        return mRochadePossibleBlack;
+    }
+
+    void ChessBoard::setRochadePossibleWhite(bool value) {
+        mRochadePossibleWhite = value;
+    }
+
+    void ChessBoard::setRochadePossibleBlack(bool value) {
+        mRochadePossibleBlack = value;
     }
 }

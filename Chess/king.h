@@ -44,6 +44,12 @@ namespace swe {
 
             // rochade
             if (mFirstMove && !mCheck && withIsKingThreatened) {
+                if(mColor == swe::Color::black)
+                    mChessBoard.setRochadePossibleBlack(true);
+                else if (mColor == swe::Color::white)
+                    mChessBoard.setRochadePossibleWhite(true);
+
+
                 // short
                 if (board[convTo1D(mRow, mCol + 1)] == nullptr && board[convTo1D(mRow, mCol + 2)] == nullptr &&
                     !isKingThreatened(mRow, mCol, mRow, mCol + 1) && !isKingThreatened(mRow, mCol, mRow, mCol + 2)) {
@@ -63,6 +69,12 @@ namespace swe {
                         possibleMoves.push_back(std::make_pair(convTo1D(mRow, mCol - 2), false));
                     }
                 }
+            }
+            else if(!mFirstMove || mCheck) {
+                if (mColor == swe::Color::black)
+                    mChessBoard.setRochadePossibleBlack(false);
+                else if (mColor == swe::Color::white)
+                    mChessBoard.setRochadePossibleWhite(false);
             }
 
             return possibleMoves;
