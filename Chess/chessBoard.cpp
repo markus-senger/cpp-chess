@@ -384,7 +384,7 @@ namespace swe {
                 sf::Sprite queenSprite = mChessGame.getSpriteHandler().getPromotionFigureSprite(mBoardWithFigures[convTo1D(mPromotionRow, mPromotionCol)]->getColor(),
                     FigureIndex::queen);
                 queenSprite.setPosition(posX + PROMOTION_FIELD_FIGURE_OFFSET_X_PX, posY + PROMOTION_FIELD_FIGURE_OFFSET_Y_PX);
-                queenSprite.scale(sf::Vector2(PROMOTION_FIELD_FIGURE_SCALE, PROMOTION_FIELD_FIGURE_SCALE));
+                queenSprite.scale(sf::Vector2f(PROMOTION_FIELD_FIGURE_SCALE, PROMOTION_FIELD_FIGURE_SCALE));
                 window.draw(queenSprite);
                 break;
             }
@@ -393,7 +393,7 @@ namespace swe {
                 sf::Sprite rookSprite = mChessGame.getSpriteHandler().getPromotionFigureSprite(mBoardWithFigures[convTo1D(mPromotionRow, mPromotionCol)]->getColor(),
                     FigureIndex::rook);
                 rookSprite.setPosition(posX + PROMOTION_FIELD_FIGURE_OFFSET_X_PX, posY + PROMOTION_FIELD_FIGURE_OFFSET_Y_PX);
-                rookSprite.scale(sf::Vector2(PROMOTION_FIELD_FIGURE_SCALE, PROMOTION_FIELD_FIGURE_SCALE));
+                rookSprite.scale(sf::Vector2f(PROMOTION_FIELD_FIGURE_SCALE, PROMOTION_FIELD_FIGURE_SCALE));
                 window.draw(rookSprite);
                 break;
             }
@@ -402,7 +402,7 @@ namespace swe {
                 sf::Sprite bishopSprite = mChessGame.getSpriteHandler().getPromotionFigureSprite(mBoardWithFigures[convTo1D(mPromotionRow, mPromotionCol)]->getColor(),
                     FigureIndex::bishop);
                 bishopSprite.setPosition(posX + PROMOTION_FIELD_FIGURE_OFFSET_X_PX, posY + PROMOTION_FIELD_FIGURE_OFFSET_Y_PX);
-                bishopSprite.scale(sf::Vector2(PROMOTION_FIELD_FIGURE_SCALE, PROMOTION_FIELD_FIGURE_SCALE));
+                bishopSprite.scale(sf::Vector2f(PROMOTION_FIELD_FIGURE_SCALE, PROMOTION_FIELD_FIGURE_SCALE));
                 window.draw(bishopSprite);
                 break;
             }
@@ -411,7 +411,7 @@ namespace swe {
                 sf::Sprite knightSprite = mChessGame.getSpriteHandler().getPromotionFigureSprite(mBoardWithFigures[convTo1D(mPromotionRow, mPromotionCol)]->getColor(),
                     FigureIndex::knight);
                 knightSprite.setPosition(posX + PROMOTION_FIELD_FIGURE_OFFSET_X_PX, posY + PROMOTION_FIELD_FIGURE_OFFSET_Y_PX);
-                knightSprite.scale(sf::Vector2(PROMOTION_FIELD_FIGURE_SCALE, PROMOTION_FIELD_FIGURE_SCALE));
+                knightSprite.scale(sf::Vector2f(PROMOTION_FIELD_FIGURE_SCALE, PROMOTION_FIELD_FIGURE_SCALE));
                 window.draw(knightSprite);
                 break;
             }
