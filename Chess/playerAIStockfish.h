@@ -6,11 +6,12 @@
 #include <stdio.h>
 #include <iostream>
 #include <string>
+#include <random>
 
 namespace swe {
 	class PlayerAIStockfish : public Player {
 	public:
-		PlayerAIStockfish(swe::Color color, bool turn, swe::ChessBoard& board) : Player(color, true, turn, board, false) {
+		PlayerAIStockfish(swe::Color color, bool turn, swe::ChessBoard& board) : mSkillLevel{ 20 }, Player(color, true, turn, board, false) {
 			startEngine();
 		}
 
@@ -21,13 +22,19 @@ namespace swe {
 		bool turn() override {
 			if (mTurn) {
 				if (!mPreparation) {
-					std::string position = "position fen " + mBoard.getCurBoardFEN() + (mColor == swe::Color::white ? " w" : " b") + "\ngo depth 8\n";
+					std::random_device rd;
+					std::mt19937 rng(rd());
+					std::uniform_int_distribution<size_t> dist(5, 15);
+					size_t randomDepth = dist(rng);
+
+					std::string position = "position fen " + mBoard.getCurBoardFEN() + (mColor == swe::Color::white ? " w KQ" : " b kq") + "\n"
+						+ "go depth " + std::to_string(randomDepth) + "\n";
 
 					WriteFile(pipin_w, position.c_str(), position.length(), &writ, NULL);
 					mPreparation = true;
 					clock.restart();
 				}
-				else if (clock.getElapsedTime().asMilliseconds() > 10) {
+				else if (clock.getElapsedTime().asMilliseconds() > 50) {
 					std::string str;
 					PeekNamedPipe(pipout_r, buffer, sizeof(buffer), &read, &available, NULL);
 					do
@@ -49,10 +56,11 @@ namespace swe {
 							str = str.substr(0, 4);
 						}
 						else str = str.substr(0, 4);
+
 						auto figure = mBoard.getBoardWithFigures()[mBoard.getPosOfBoardWithString(str, true)];
 						figure->initPossibleSteps();
 						figure->move(calcRowFromIdx(mBoard.getPosOfBoardWithString(str, false)),
-								calcColFromIdx(mBoard.getPosOfBoardWithString(str, false)), false, promotion);
+							calcColFromIdx(mBoard.getPosOfBoardWithString(str, false)), false, promotion);
 
 						mPreparation = false;
 						return true;
@@ -77,12 +85,18 @@ namespace swe {
 			sti.hStdOutput = pipout_w;
 			sti.hStdError = pipout_w;
 
+			DWORD mode = PIPE_READMODE_BYTE | PIPE_NOWAIT;
+			SetNamedPipeHandleState(pipout_r, &mode, NULL, NULL);
+
 			const char* narrowStr = "./StockfishEngine/stockfish-windows-x86-64-modern.exe";
 			int requiredSize = MultiByteToWideChar(CP_UTF8, 0, narrowStr, -1, NULL, 0);
 			LPWSTR path = new wchar_t[requiredSize];
 			MultiByteToWideChar(CP_UTF8, 0, narrowStr, -1, path, requiredSize);
 
 			CreateProcess(NULL, path, NULL, NULL, TRUE, 0, NULL, NULL, &sti, &pi);
+
+			std::string skillLevelCmd = "setoption name Skill Level value " + std::to_string(mSkillLevel) + "\n";
+			WriteFile(pipin_w, skillLevelCmd.c_str(), skillLevelCmd.length(), &writ, NULL);
 		}
 
 		void closeEngine() override
@@ -98,5 +112,7 @@ namespace swe {
 		BYTE buffer[4096];
 		DWORD writ, excode, read, available;
 		sf::Clock clock;
+
+		int mSkillLevel;
 	};
 }
