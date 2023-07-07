@@ -1,13 +1,14 @@
 # cpp-chess
-[NOT FINISHED YET] A small implementation of a chess game using C++, SFML and the chess engine "Stockfish 16" (Exercise for university)
+A small implementation of a chess game using C++, SFML and the chess engine "Stockfish 16" (Exercise for university)
 
-![image](https://github.com/markus-senger/cpp-chess/assets/77236323/7215280b-a715-4284-8ea9-f5607b7e02b9)
+![image](https://github.com/markus-senger/cpp-chess/assets/77236323/b770f14c-9bf6-4ba1-af9d-24468b4ded07)
 
-![image](https://github.com/markus-senger/cpp-chess/assets/77236323/35ba0755-123d-47d6-8501-4956c6cfd660)
+![image](https://github.com/markus-senger/cpp-chess/assets/77236323/b796d6a5-1424-46f4-8c5d-137a67e70b2c)
 
-![image](https://github.com/markus-senger/cpp-chess/assets/77236323/affe2364-0009-4998-bd4a-a1ef63876ac3)
+![image](https://github.com/markus-senger/cpp-chess/assets/77236323/ceb94fc1-ba1b-4eab-a5a2-519c3bf14c69)
 
-![image](https://github.com/markus-senger/cpp-chess/assets/77236323/6f7ee6ea-d48a-4c90-911e-cd4142bf6bf4)
+![image](https://github.com/markus-senger/cpp-chess/assets/77236323/e078b856-53ad-4ee6-9f39-78fa8030770a)
+
 
 
 
