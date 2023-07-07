@@ -8,8 +8,6 @@ Under [Releases](https://github.com/markus-senger/cpp-chess/releases) you can do
 
 ![image](https://github.com/markus-senger/cpp-chess/assets/77236323/b796d6a5-1424-46f4-8c5d-137a67e70b2c)
 
-![image](https://github.com/markus-senger/cpp-chess/assets/77236323/ceb94fc1-ba1b-4eab-a5a2-519c3bf14c69)
-
 ![image](https://github.com/markus-senger/cpp-chess/assets/77236323/e078b856-53ad-4ee6-9f39-78fa8030770a)
 
 
